@@ -29,8 +29,8 @@
 \usepackage[onehalfspacing]{setspace}
 
 %% Scripture and Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[english]{babel}  %LANGUAGE
-%\usepackage[ngerman]{babel} %LANGUAGE
+%\usepackage[english]{babel}  %LANGUAGE
+\usepackage[ngerman]{babel} %LANGUAGE
 \usepackage[T1]{fontenc}
 \usepackage[ansinew]{inputenc}
 \usepackage{textcomp} % Euro-Sign etc.
@@ -91,14 +91,14 @@
 %% Global Document Information %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % please fill in your personal information
 % do not delete anything here
-\newcommand{\thesistitle}{Thesis Title}
-\newcommand{\thesistype}{Master Thesis}
-\newcommand{\autor}{Author Name}
-\newcommand{\mail}{author-email@tu-ilmenau.de}
-\newcommand{\courseofstudies}{rocket science}
-\newcommand{\matriculationnr}{XXXXX}
+\newcommand{\thesistitle}{Konzeptionierung und Implementierung einer intelligenten Ladestation in einer diskreten eventbasierten Simulationsumgebung}
+\newcommand{\thesistype}{Bachelorarbeit}
+\newcommand{\autor}{Ludwig Breitsprecher}
+\newcommand{\mail}{ludwig.breitsprecher@tu-ilmenau.de}
+\newcommand{\courseofstudies}{Wirtschaftsinformatik}
+\newcommand{\matriculationnr}{54131}
 \newcommand{\supervisor}{Prof. Responsible}
-\newcommand{\secondtutor}{Second Reader}
+\newcommand{\secondtutor}{Thomas Dietrich}
 \newcommand{\faculty}{Department of Computer Science and Automation}
 \newcommand{\department}{Systems and Software Engineering Group}
 \newcommand{\location}{Ilmenau}
@@ -162,8 +162,8 @@
 %\usepackage{pdfcomment}
 \usepackage[%
 	%disable,
-	english, %LANGUAGE
-	%german, %LANGUAGE
+	%english, %LANGUAGE
+	german, %LANGUAGE
 	textsize=tiny,
 	colorinlistoftodos
 ]{todonotes}
@@ -221,8 +221,8 @@
 %% Abbreviations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[intoc]{nomencl}
 \let\abbrev\nomenclature
-%\renewcommand{\nomname}{Abkürzungsverzeichnis} %LANGUAGE
-\renewcommand{\nomname}{Abbreviations} %LANGUAGE
+\renewcommand{\nomname}{Abk�rzungsverzeichnis} %LANGUAGE
+%\renewcommand{\nomname}{Abbreviations} %LANGUAGE
 \setlength{\nomlabelwidth}{.25\hsize}
 \renewcommand{\nomlabel}[1]{#1 \dotfill} % dots between abbreviations and explainations
 \setlength{\nomitemsep}{-\parsep} % Decrease line spacing
@@ -349,9 +349,9 @@
 %% user defined commands and helpers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % abbreviations with correct spacing %LANGUAGE
-%\newcommand{\ua}{\mbox{u.\,a.\ }}
+\newcommand{\ua}{\mbox{u.\,a.\ }}
 \newcommand{\zB}{\mbox{z.\,B.\ }}
-%\newcommand{\dahe}{\mbox{d.\,h.\ }}
+\newcommand{\dahe}{\mbox{d.\,h.\ }}
 \newcommand{\iic}{\mbox{I\texttwosuperior C}} % I²C
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

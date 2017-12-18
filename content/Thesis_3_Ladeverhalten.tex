@@ -1,0 +1,37 @@
+\chapter{Ladeverhalten} 
+\label{ch:Ladeverhalten}
+Im folgenden Kapitel wird das Ladeverhalten der Ladestation entworfen. Begonnen wird mit dem Vergleich mehrerer Energiespeicher. Dieser Vergleich soll herausarbeiten, aus welchen Gründen in mobilen Anwendungen vorzugsweise Lithium-Ionen basierte Akkumulatoren eingesetzt werden. 
+Darauf aufbauend werden übliche Ladeverfahren und deren Spezifika untersucht. 
+Nach dieser von Literatur angetriebenen Untersuchung, werden Beispielwerte eines Ladegerätes und Akkumulators gemessen.
+Abschließend wird ein Fazit gezogen, welches die Grundlage für den zu implementierenden Ladealgorithmus liefert.
+
+\section{Energiespeicher}
+\label{sec:Energiespeicher}
+Im einleitenden Kapitel über Multicopter \todo{verweis}, wurde festgestellt, dass diese üblicherweise von Elektromotoren angetrieben werden. Elektromotoren benötigen eine elektrische Energiezufuhr, welche von Akkumulatoren bereit gestellt wird.
+
+Akkumulatorentypen lassen sich in Gruppen basierend auf ihren chemischen Bestandtteilen einteilen. Drei häufig verwendete Typen basieren auf Lithium-Ionen, Nickel und Bleisäure. Durch die gleiche Basis haben Akkumulatoren innerhalb einer Gruppe ähnliche Merkmale.
+Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Gesetze oder Wettbewerb bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auch auf der Bekanntheit. Dessen ungeachtet soll die Ladestation für aktuelle Quadrokopter konzeptioniert werden und nicht für eine Utopie.
+
+\subsection{Bleisäure Akkumulatoren}
+\label{subsec:Bleisäure Akkumulatoren}
+In einem Bleisäure Akkumulator besteht die Elektrode aus Blei und Bleioxid, der dazugehörige Elektrolyt besteht aus verdünnter Schwefelsäure. Dieser Akkumulatortype gilt als der älteste Entwurf und reicht bis in das 19. Jahrhundert zurück. 
+Die Nennspannung einer Zelle beträgt 2 V und ist damit ebenso wie die Energiedichte mit ungefähr 30-50 Wh/kg vergleichsweise gering. Die Lebensdauer kann grob in einer Zeitspanne angegeben werden, während die anderen Gruppen vor allem durch die Nutzung abgebaut werden. Je nach Qualität ist eine Lebensdauer von 4-15 Jahren zu erwarten. \todo{wirklich?}
+Durch die lange Bekanntheit der Technologie, sind diese Akkumulatoren relativ günstig.
+
+Einsatzgebiete sind aufgrund des hohen Gewichts vor allem stationäre Anwendungen, beispielsweise Notstromversorgung und Energiespeicher für Photovoltaikanlagen. In kleinerem Ausmaß gibt es auch mobile Anwendungsgebiete, unter anderem als Starterbatterie in Autos werden häufig auf Bleisäure basierende Akkumulatoren eingesetzt. \todo{Quelle}
+
+\subsection{Nickel Akkumulatoren}
+\label{subsec:Nickel Akkumulatoren}
+
+\subsection{Lithium-Ionen Akkumulatoren}
+\label{subsec:Lithium-Ionen Akkumulatoren}
+
+
+\section{Ladeverfahren}
+\label{sec:Ladeverfahren}
+
+\section{Beispielmessungen}
+\label{sec:Beispielmessungen}
+
+\section{Fazit}
+\label{sec:Fazit}
