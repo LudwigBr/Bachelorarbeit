@@ -10,28 +10,62 @@ Abschließend wird ein Fazit gezogen, welches die Grundlage für den zu implementi
 Im einleitenden Kapitel über Multicopter \todo{verweis}, wurde festgestellt, dass diese üblicherweise von Elektromotoren angetrieben werden. Elektromotoren benötigen eine elektrische Energiezufuhr, welche von Akkumulatoren bereit gestellt wird.
 
 Akkumulatorentypen lassen sich in Gruppen basierend auf ihren chemischen Bestandtteilen einteilen. Drei häufig verwendete Typen basieren auf Lithium-Ionen, Nickel und Bleisäure. Durch die gleiche Basis haben Akkumulatoren innerhalb einer Gruppe ähnliche Merkmale.
-Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Gesetze oder Wettbewerb bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auch auf der Bekanntheit. Dessen ungeachtet soll die Ladestation für aktuelle Quadrokopter konzeptioniert werden und nicht für eine Utopie.
+Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Wettbewerb oder Gesetze bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auf der Bekanntheit. Dessen ungeachtet wird  die Ladestation für aktuelle Multicopter konzeptioniert. \todo{weiterschreiben}
 
 \subsection{Bleisäure Akkumulatoren}
 \label{subsec:Bleisäure Akkumulatoren}
 In einem Bleisäure Akkumulator besteht die Elektrode aus Blei und Bleioxid, der dazugehörige Elektrolyt besteht aus verdünnter Schwefelsäure. Dieser Akkumulatortype gilt als der älteste Entwurf und reicht bis in das 19. Jahrhundert zurück. 
-Die Nennspannung einer Zelle beträgt 2 V und ist damit ebenso wie die Energiedichte mit ungefähr 30-50 Wh/kg vergleichsweise gering. Die Lebensdauer kann grob in einer Zeitspanne angegeben werden, während die anderen Gruppen vor allem durch die Nutzung abgebaut werden. Je nach Qualität ist eine Lebensdauer von 4-15 Jahren zu erwarten. \todo{wirklich?}
+Die Nennspannung einer Zelle beträgt 2 V und ist damit ebenso wie die Energiedichte mit 20-50 Wh/kg vergleichsweise gering. Je nach Qualität kann eine Lebensdauer von 200-2000 Ladezyklen erwartet werden. \todo{wirklich?}
 Durch die lange Bekanntheit der Technologie, sind diese Akkumulatoren relativ günstig.
 
-Einsatzgebiete sind aufgrund des hohen Gewichts vor allem stationäre Anwendungen, beispielsweise Notstromversorgung und Energiespeicher für Photovoltaikanlagen. In kleinerem Ausmaß gibt es auch mobile Anwendungsgebiete, unter anderem als Starterbatterie in Autos werden häufig auf Bleisäure basierende Akkumulatoren eingesetzt. \todo{Quelle}
+Für den Einsatz in Multicoptern sind diese Akkumulatoren aufgrund der geringen Energiedichte und der geringen Spannung ungeeignet. Einsatzgebiete sind in erster Linie stationäre Anwendungen, für die Energiedichte und Spannung weniger relevant sind oder Anwendungen in denen Robustheit und Sicherheit einen hohen Stellenwert haben, beispielsweise Autobatterien.
 
 \subsection{Nickel Akkumulatoren}
 \label{subsec:Nickel Akkumulatoren}
+In dieser Gruppe gibt es vor allem zwei relevante Ausprägungen, Nickel-Cadmium und Nickel-Metalhydrid.
+Nickel-Cadmium Akkumulatoren sind die älteren und in der Energiedichte und Lebensdauer unterlegen. Darüber hinaus ist Cadmium ein giftiger Stoff und muss entsprechend sorgfältig behandelt werden. Der einzige Vorteil gegenüber Nickel-Metalhydrid ist die geringere Selbstentladung, welche für die Anwendung in Multicoptern von untergeordneter Relevanz ist.
+Nickel-Metalhydrid Akkumulatoren haben eine Energiedichte von 60-80 Wh/kg und Nennspannung von 1,2 V. Die Lebensdauer beträgt weniger als 3000 Ladezyklen. Nachteile sind vor allem die hohe Selbstentladung, die im Vergleich zu Bleiakkumulatoren höheren Kosten und der Memory-Effekt, welcher bei Teilentladungen zu einer kleineren nutzbaren Kapazität führt.
+
+Um das Jahr 2000 waren diese Akkumulatoren die Wahl für mobile Anwendungen. Ältere Multicopter könnten daher auf Nickel Akkumulatoren basiert haben, inzwischen wurden diese jedoch durch Lithium-Ionen basierte Akkumulatoren ersetzt. Eingesetzt werden diese Energiespeicher, wenn die im Vergleich zur Bleisäure größere Energiedichte einen Vorteil darstellt und dennoch die Kosten ausschlaggebend sind, beispielsweise in Fernbedienungen, Taschenlampen oder Elektrowerkzeugen.
+
 
 \subsection{Lithium-Ionen Akkumulatoren}
 \label{subsec:Lithium-Ionen Akkumulatoren}
+In der Regel kommen in mobilen Anwendungen aktuell Lithium-Ionen Akkumulatoren zum Einsatz. Elektroautos, Handys und auch Multicopter werden von ihnen mit Energie versorgt. Innerhalb dieser Akkumulatorgruppe gibt es eine Vielzahl von eingesetzten Verbindungen. Die für Elektromobilität genutzten Akkumulatoren sind meistens Lithium-Polymer Akkumulatoren (LiPo).
+Diese haben eine Energiedichte von 200 Wh/kg, eine Spannung von ~3,8 V und sie können mehr als 1000 Ladezyklen durchleben. Darüber hinaus gibt es bei diesem Batterietyp keinen Memory-Effekt. Doch neben den offensichtlichen Vorteilen entstehen auch einige Nachteile beim Einsatz von LiPo's. Der Akkumulator reagiert sensibler während des Ladeprozesses, eine zu starke Auf- oder Entladung sind schädlich und verringern die Lebensdauer dramatisch. Für einen reibungslosen Ablauf muss der "state of charge" bekannt sein und die einzelnen Zellen (wenn mehrere Zellen zum Einsatz kommen) müssen balanciert aufgeladen werden.
+Darüber hinaus sind diese Akkumulatoren die teuerste Variante, in erster Linie wegen der vergleichsweise neuen Technologie und der begrenzten zur Verfügung stehenden Menge von Lithium.
+
+Trotz Betrachtung der Nachteile sind die hohe Energiedichte und die hohe Spannung ausschlaggebend für den Einsatz in mobilen Anwendungen. Im Rahmen von Elektromobilität stehen diese Akkumulatoren im Zentrum vieler Forschungen. Neben der Verbesserung der bestehenden Verbindungen wird auch mit neuen Batterietypen experimentiert. Ein Beispiel für diese Forschung sind Lithium-Sauerstoff Akkumulatoren, welche eine zehnfach höhere Energiedichte versprechen, aber wenigstens bisher durch ihre kurze Lebensdauer von ~50 Zyklen nicht eingesetzt werden.
 
 
 \section{Ladeverfahren}
 \label{sec:Ladeverfahren}
+Das Ladeverfahren mit dem ein Akkumulator aufgeladen wird beeinflusst diesen maßgebend. Im Bereich der Elektromobilität ist die Ladezeit essentiell. Elektroautos werden unnütz, wenn die tägliche Aufladung den Bedarf für beispielsweise den Arbeitsweg nicht abdecken kann. Im Fall von Multicoptern die eine Mission erfüllen sollen, ist die Audladegeschwindigkeit ausschlaggebend für die Menge der benötigten Fluggeräte. Unter Annahme begrenzter zur Verfügung stehender Ressourcen (Multicopter), wird durch die Ladegeschwindigkeit die Maximalleistung des Schwarms beeinflusst.  
+
+Lithium-Ionen Akkumulatoren reagieren sensibel auf Überladung oder zu hohe Spannung. Die chemischen Bestandteile werden beschädigt und die Leistung des Energiespeichers fällt ab. Ein einfacher Ladevorgang mit einer konstanten Stromstärke kommt deshalb nicht in Frage. Je näher der Füllstand der Kapazität des Akkumulators kommt, desto größer wird die Spannung. Lithium-Polymer Akkumulatoren haben üblicherweise eine Maximalspannung von 4,2 V, eine Überschreitung verursacht Schäden und reduziert die Lebensdauer dramatisch.
+
+Das üblicherweise genutzte Ladeverfahren, um sowohl eine möglichst hohe Ladegeschwindigkeit, als auch die Lebensdauer der Akkumulatoren zu sichern nennt sich constant current constant voltage CCCV. \todo{Name}
+Dieses Verfahren besteht aus zwei Phasen. In der ersten Phase (CC) wird der leere Akkumulator mit einer konstanten Stromstärke beladen. Im Verlauf des Ladevorgangs steigt die Spannung an. Die Füllmenge des Akkumulators steigt linear über die Zeit an. Der Übergang zur zweiten Phase (CV) findet statt, sobald die Maximalspannung (für LiPo's 4,2V) erreicht ist. Zu diesem Zeitpunkt ist der Akkumulator mit ~70-80 Prozent \todo{Prozent}, seiner Kapazität geladen. 
+In der zweiten Phase bleibt die Spannung konstant beim Maximalwert und die Stromstärke nimmt ab. Daraus folgt, dass die Ladegeschwindigkeit nun nicht mehr linear verläuft, sondern immer weiter abfällt, je stärker der Akkumulator geladen ist. 
+Phase zwei endet üblicherweise sobald eine festgelegte minimale Stromstärke (z.B. 100 mA) erreicht wurde. Der Akkumulator ist dann abhängig vom festgelegten Minimalwert gefüllt. 
+
 
 \section{Beispielmessungen}
 \label{sec:Beispielmessungen}
+Die Ausführungen aus der Literatur geben einen Überblick über die Funktionsweise der Akkumulatoren und ihre Aufladung. Mit Hilfe der Beispielmessungen sollen Werte gefunden werden, die den Ladeverlauf realistisch abbilden.
+
+Für die Messungen wurde ein Turnigy Accucell 6 Ladegerät verwendet, welches das CCCV Verfahren benutzt, um unter anderem LiPo Akkumulatoren aufzuladen. Als Testakkumulator wird ein bereits für Drohnenflüge gebrauchter Akkumulator \todo{Akku} mit einer Maximalkapazität von 1800mAh verwendet. Der Akkumulator wurde vor jedem Ladevorgang mit dem Ladegerät im Modus "Discharge" mit 1A entladen.
+Für den Ladevorgang wurde der Akkumulator mit einer Stromstärke von 1 A, 2 A und 4 A geladen. Dieser Ablauf wurde dreimal wiederholt um die Wahrscheinlichkeit für zufällige Erscheinungen zu reduzieren.
+
+\todo{Ergebnisstabelle, ein Diagramm} 
+
+
 
 \section{Fazit}
 \label{sec:Fazit}
+
+Die Literatur und Testmessungen bringen ähnliche Ergebnisse zum Vorschein. Es wird deutlich, dass der Ladevorgang in der ersten Phase linear verläuft und abhängig von der verwendeten Stromstärke ist. Die Dauer dieser Phase kann durch eine höhere Stromstärke verringert werden. 
+Die Kapazität des Akkumulators zum Start der zweiten Phase ist in der Literatur und den Testmessungen verschieden. Während in der verwendeten Literatur 70-80  \todo{Prozent} angegeben sind, startet Phase zwei in den Testmessungen erst bei ~95 \todo{Wert und Prozent}. Möglicherweise ist die Nennkapazität des Akkumulators (1800mAh) geringer, als der wirkliche Maximalwert. Der erzeugte Puffer sorgt dafür, dass erstens der Ladevorgang stark beschleunigt wird und zweitens, dass der Akkumulator nicht vollständig geladen werden kann. Da die Lebensdauer des Akkumulators durch vollständiges Entladen und Laden stark abnimmt, kann der Hersteller damit für eine größere Lebensdauer garantieren.
+
+Für die Implementierung der Ladestation werden Näherungswerte der Beispielmessungen verwendet.
+\todo{Nährwerte}
