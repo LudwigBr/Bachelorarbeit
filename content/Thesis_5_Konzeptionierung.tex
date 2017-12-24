@@ -1,0 +1,98 @@
+\chapter{Konzeptionierung} 
+\label{ch:Konzeptionierung}
+
+Im folgenden Kapitel wird die Konzeptionierung der intelligenten Ladestation dargestellt. Grundlage dafür sind die funktionalen Eigenschaften, sowie das bestehende Projekt.
+Die Darstellung des Entwicklungsprozesses wird durch UML-Klassendiagramme unterstützt. Dort werden die neu hinzugefügten Eigenschaften und Methoden aufgeführt, deren Entstehung im Text erläutert wird. Die Diagramme geben einen Überblick über die für das behandelte Thema relevanten Aspekte der Klassen. 
+Innerhalb des Kapitels wird es einen Zwischenüberblick geben. Dort wird ein Klassendiagramm, welches alle MUST-Anforderungen abdeckt, präsentiert. Im abschließenden Überblick werden die erledigten SHOULD- und COULD- Anforderungen ergänzt. 
+
+\section{Grundlegende Designentscheidungen}
+\label{sec:Grundlegende Designentscheidungen}
+Einige grundlegende Designentscheidungen werden durch das bestehende Projekt vorgegeben. Die Entwicklung ist auf ein Objektorientiertes Modell in der Programmiersprache c++ und das Simulationsframework OMNeT++ festgelegt. Konfigurationen werden aus einer zentralen Datei eingelesen und können während der Initialisierung der Objekte in Eigenschaften überführt werden. 
+
+Das Netzwerk der Simulationsobjekte wird in (.ned) Dateien definiert. Neben den Informationen für die grafische Darstellung werden hier auch die Verbindungen der einzelnen Elemente festgelegt. Bevor Netzwerkteilnehmer miteinander kommunizieren können muss eine Verbindung definiert werden. Die Ladestationen müssen mit den Multicoptern und den anderen Ladestationen kommunizieren können.
+
+Objekteigenschaften sind im Sinne der Datenkapselung protected und je nach Bedarf werden sogenannte Getter- und Settermethoden für den äußeren Zugriff hinzugefügt. \todo{Quelle}
+
+\section{Nachrichten}
+\label{sec:Nachrichten}
+
+Für die Kommunikation zwischen verschiedenen Netzwerkteilnehmern stellt OMNeT++ Nachrichten zur Verfügung. Nachrichten sind Objekte vom Typ cMessage. Ihnen kann eine Bezeichnung zugewiesen werden, was eine Unterscheidung ermöglicht. Darüber hinaus können eigene Nachrichtentypen in speziellen (.msg) Dateien definiert werden. Diesen können neben einer Bezeichnung noch individuelle weitere Informationen in Form von Parametern enthalten. Diese vereinfachten Klassendefinitionen werden während des Kompilierprozesses in vollwertige c++ Klassen übersetzt, welche alle nötigen Eigenschaften und Methoden für den Versand beinhalten. Parameter können über Setter-Methoden angehangen und über Getter-Methoden ausgelesen werden. 
+
+Damit die Nachricht erfolgreich versendet werden kann muss außerdem der richtige Empfänger bekannt sein. Die definierten Verbindungen (\ref{sec:Grundlegende Designentscheidungen}) werden in der Simulation mit In- und Outputgates organisiert. Ein Gate verbindet dabei immer genau zwei Netzwerkteilnehmer. Durch die Unterteilung in In- und Output können so auch einseitige Kommunikationswege abgebildet werden. Da die Auswahl des richtigen Gates für den Nachrichtenversand ein für alle Objekte relevantes Problem ist, wird eine Helfermethode in der GenericNode geplant. Diese Methode soll das passende Gate zu einem übergebenen Objekt im Netzwerk zurückgeben.
+
+Die Nachrichten werden in den Objekten in der handleMessage() Methode verarbeitet. Basierend auf der Bezeichnung kann der Nachrichtentyp identifiziert werden. Nach dem das Objekt der Basisklasse cMessage in ein Objekt der abgeleiteten Klasse überführt wurde, kann auf die individuellen Parameter zugegriffen werden.
+
+Im Verlauf der Konzeptionierung werden verschiedene Nachrichtentypen hinzugefügt, um die Kommunikation mit der Ladestation zu ermöglichen. Diese werden nur in ihrer vereinfachten Form modelliert, da die Entwicklungsumgebung die Übersetzung automatisch übernimmt. 
+
+\section{GenericNode}
+\label{sec:GenericNode}
+
+Die GenericNode stellt ein Grundgerüst für Objekte innerhalb der Simulation zur Verfügung. Die Klasse für die Ladestation ChargingNode wird von der GenericNode abgeleitet. Durch die Bereitstellung der im Diagramm \todo{verweis} gezeigten Eigenschaften und Methoden, kann sich die Weiterentwicklung auf die relevanten Eigenschaften für die intelligente Ladestation fokussieren. 
+
+Nach der Instanziierung der Klasse wird die initializeState() Methode aufgerufen. Diese ließt die Konfigurationsdatei ein und übergibt die Werte für die Koordinaten x, y, z und die timeStep Eigenschaft. Anschließend wird das Objekt auf der Karte gemäß der angegebenen Koordinaten platziert.
+Darüber hinaus wird ein regelmäßiger Aufruf vorbereitet. Nach einer initialen Aktualisierungsnachricht wird die updateState() Methode aufgerufen. Hier werden die regelmäßigen Aufgaben definiert. Abschließend wird die Eigenschaft lastUpdate mit der aktuellen Zeit belegt und mit Hilfe der Methode nextNeededUpdate() eine neue Aktualisierungsnachricht generiert. 
+
+Abschließend wird die im Nachrichtenkapitel (\ref{sec:Nachrichten}) aufgegriffene Helfermethode für den Nachrichtenversand hinzugefügt.
+\todo{Diagramm ändern}
+
+\begin{figure}[H]
+	\caption{GenericNode UML-Klassendiagramm}
+	\adjincludegraphics[trim={1.5cm {.68\height} {12cm} {.05\height}},clip]{images/GenericNodeRelevant}
+\end{figure}
+
+\section{Lade- und Warteplätze}
+\label{sec:Lade- und Warteplätze}
+Für die Lade- und Warteplätze muss die Anzahl der jeweiligen Plätze gespeichert werden. Darüber hinaus müssen Containerobjekte für die Multicopter vorhanden sein. Abgelegt werden Verweise auf die Objekte. Die Multicopter werden in der Simulation als UAVNode dargestellt. Deren Basisklasse ist die MobileNode, welche bereits den Energiespeicher beinhaltet. Der Akkumulator ist der für die Ladestation relevante Aspekt ist. Daher liegt es Nahe jede MobileNode als Konsumenten zuzulassen.
+
+An der Ladestation können die Objekte in drei unterschiedliche Phasen sein. Das Objekt wartet auf seine Aufladung, es wird gerade aufgeladen und es wurde bereits fertig aufgeladen. Um diese drei Zustände klar voneinander zu trennen werden drei ähnliche Containerobjekte konzeptioniert. Die Container müssen dabei eine variable Größe haben können und Objekte müssen an jeder Stelle des Container hinzugefügt und entfernt werden können. Aus der c++ Bibliothek bietet sich dafür die deque (double-ended queue) an. 
+
+Während die Anzahl der Plätze von externen Objekten einsehbar sein soll, sollten die Container ausschließlich vom Objekt selbst und möglichen Erben eingesehen und geändert werden können.
+
+\begin{figure}[H]
+	\caption{ChargingNode UML-Klassendiagramm}
+	\adjincludegraphics[trim={1.5cm {.75\height} {12.5cm} {.05\height}},clip]{images/ChargingNodeQueues}
+\end{figure}
+
+\section{Verbindung mit Multicopter}
+\label{sec:Verbindung mit Multicopter}
+Der Anschluss eines Multicopters an die Ladestation benötigt eine Kommunikationsschnittelle. Als trivialer Anfang wird dafür eine Nachricht konzeptioniert, die vom Multicopter an die Ladestation versendet wird, sobald diser bereit für den Ladeprozess ist. Die Ladestation muss nach dem Empfang einer solchen Nachricht prüfen, ob der Multicopter an der Ladestation ist und kann ihn dann zu den wartenden Objekten hinzufügen.
+
+\todo{Diagramm}
+
+\section{realistisches Ladeverhalten}
+\label{sec:realistisches Ladeverhalten}
+Zentrales Element einer Ladestation ist der zugehörige Ladealgorithmus. Im Kapitel über das Ladeverhalten (Kapitel \ref{ch:Ladeverhalten}) wurde bereits festgestellt, dass Akkumulatoren und die zugehörigen Ladealgorithmen zu aktuellen Forschungsthemen gehören. Während der Konzeptionierung von Software ist es essentiell die Erweiterbarkeit und Austauschbarkeit der einzelnen Komponenten zu beachten. 
+Ein Interface stellt eine Beschreibung für eine zukünftige Implementierung bereit. Es werden Methoden definiert, welche von den erbenden Klassen zwingend implementiert werden müssen. Dadurch wird sichergestellt, dass die unterschiedlichen Implementierungen eines Interfaces untereinander kompatibel sind. Für den Ladealgorithmus werden ein Interface IChargeAlgorithm und eine Implementierung davon ChargeAlgorithmCCCV konzeptioniert.
+Der verwendete Ladealgorithmus kann während der Initialisierung spezifiziert werden und in eine Eigenschaft der Ladestation gespeichert werden. Für den Algorithmus relevante Eigenschaften müssen an dieser Stelle übergeben werden, so auch die verwendete Stromstärke, welche maßgebend Einfluss auf die Ladegeschwindigkeit hat. Anschließend kann über die Methode calculateChargeAmount() die zu ladende Menge für einen Zeitraum abgefragt werden. Die Methode calculateChargeTime() hingegen errechnet für einen Zielladezustand die benötigte Zeit.
+
+Damit die Multicopter an der Ladestation geladen werden können müssen diese von den Warteplätzen auf die Ladeplätze verschoben werden. Dafür muss bei jeder Aktualisierungsnachricht die Methode scheduleChargeSpots() ausgelöst werden, dort werden fertig geladene Multicoper in den entsprechenden Container verschoben und anschließend die freien Warteplätze gefüllt.
+Die Auswahl des nächsten zu ladenden Multicopters ist in eine weitere Methode getNextWaitingObjectIterator() ausgelagert. Diese Auslagerung soll bei einem komplexen Auswahlalgorithmus die Gesamtkomplexität der Anwendung reduzieren. Im trivialsten Fall wird hier nur das erste Objekt aus dem Warteplätzecontainer ausgewählt.
+Nachdem die Ladeplätze gefüllt wurden, wird die Methode charge() aufgerufen. Diese nutzt die lastUpdate Eigenschaft aus der GenericNode, um die vergangene Zeit seit dem letzten Ladevorgang zu errechnen. Basierend auf der vergangenen Zeit seit dem letzten Ladevorgang wird für jeden Multicopter auf einem Ladeplatz die die aufzuladene Kapazität errechnet. Im Anschluss wird die Batterie des Multicopters um den entsprechenden Wert aufgeladen. Abschließend muss der Wert der letzten Aktualisierung auf den momentanen Zeitpunkt gesetzt werden und ein Aufladezyklus ist abgeschlossen.
+
+\todo{diagramm}
+
+\section{Reservierungen und Vorhersagen}
+Für andere Netzwerkteilnehmer ist die Information wie ein potenzieller Ladeprozess verlaufen würde wohlmöglich interessant, um entscheiden zu können ob dieser wahrgenommen wird. Die Ladestation im aktuellen Zustand könnte Vorhersagen über die vermutliche Ladedauer abgeben und dabei alle in den Warte- und Ladecontainern befindlichen Multicopter einbeziehen. Neue Multicopter können allerdings ohne vorherige Information jederzeit eintreffen und der Warteliste hinzugefügt werden. Vorhersagen für Multicopter die noch nicht eingetroffen sind, werden dadurch entwertet und nicht verlässlich. 
+Damit die Ladestation ihre Vorhersagen einhalten kann, muss den Multicoptern eine Möglichkeit gegeben werden, einen Platz auf der Warteliste zu reservieren, ohne das diese bereits an der Ladestation angekommen sind. 
+Reservierungen werden per Nachricht eingeleitet. Die Nachricht enthält dabei Informationen über die voraussichtliche Ankunftszeit, den aktuellen Ladezustand und den voraussichtlichen Verbrauch bis zur Ankunft an der Ladestation. Darüber hinaus ist ein prozentualer Zielzustand enthalten. Dadurch wird den Multicoptern die Möglichkeit geboten nur eine Teilaufladung zu erhalten.
+Diese Informationen, der Absender und der Zeitpunkt der Reservierung müssen innerhalb der Ladestation gespeichert werden. Dadurch kann bereits zum Zeitpunkt der Reservierung eine Vorhersage über die Ladedauer getroffen werden. Da für jede Vorhersage die Fertigstellungszeitpunkte der vorherigen Multicopter benötigt werden, wird dieser Zeitpunkt mit im Container abgespeichert.
+Die individuelle Containerklasse benötigt eine Eigenschaft für jede zu speichernde Information und je eine Getter- und Settermethode für den Zugriff. Die Warte- und Ladeliste wird nun nicht mehr von den Multicoptern selbst gefüllt, sondern von eigenen Containerobjekten (ChargingNodeSpotElement).
+
+Die Reservierungen ermöglichen der Ladestation die Warteliste basierend auf der Reservierungszeit zu organisieren. Dafür muss der Auswahlalgorithmus angepasst werden und die Reservierungszeit einbeziehen. Durch diese Änderung kann die Ladestation ihre Vorhersagen garantieren. Falls frühere Reservierungen nicht wahrgenommen werden, kann die Aufladezeit sich verringern, aber eine Verschlechterung ausgehend von der Vorhersage ist nicht möglich.
+
+Die Vorhersagen sind in zwei unterschiedliche Formen vorgesehen. Für die interne Verwendung ist der Fertigstellungszeitpunkt relevant. Dieser wird ebenfalls externen Interessenten zur Verfügung gestellt. Darüber hinaus kann eine Vorhersage über den Ladezustand zu einem spezifizierten Zeitpunkt angefragt werden. Deshalb gibt es zwei verschiedene Nachrichten für eine Vorhersagenanfrage. Die Antwort hingegen hat immer den selben Nachrichtentyp, in dieser ist sowohl der erreichte Ladezustand, als auch der Zeitpunkt der Fertigstellung enthalten.
+
+\begin{figure}[H]
+	\caption{Nachrichten für Vorhersagen UML-Klassendiagramm}
+	\adjincludegraphics[trim={1.5cm {.75\height} 7cm {.05\height}},clip]{images/ForecastMessages}
+\end{figure}
+
+\begin{figure}[H]
+	\caption{Containerklasse UML-Klassendiagramm}
+	\adjincludegraphics[trim={1.5cm {.70\height} 7cm {.05\height}},clip]{images/ChargingNodeSpotElement}
+\end{figure}
+
+
+
+
+

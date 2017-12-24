@@ -6,7 +6,7 @@
 \documentclass[
 	12pt,						% font size
 	english,					% LANGUAGE english document
-	%ngerman,					% LANGUAGE deutsches Dokument, für Umlaute, Silbentrennung etc. (Umlauts, Hyphenation)
+	%ngerman,					% LANGUAGE deutsches Dokument, fÃ¼r Umlaute, Silbentrennung etc. (Umlauts, Hyphenation)
 	a4paper,					% paper size
 	%oneside,					% single-sided document
 	twoside,					% two-sided document
@@ -221,7 +221,7 @@
 %% Abbreviations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[intoc]{nomencl}
 \let\abbrev\nomenclature
-\renewcommand{\nomname}{Abk�rzungsverzeichnis} %LANGUAGE
+\renewcommand{\nomname}{Abkürzungsverzeichnis} %LANGUAGE
 %\renewcommand{\nomname}{Abbreviations} %LANGUAGE
 \setlength{\nomlabelwidth}{.25\hsize}
 \renewcommand{\nomlabel}[1]{#1 \dotfill} % dots between abbreviations and explainations
@@ -277,6 +277,11 @@
 
 \usepackage{paralist}
 \usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage[justification=RaggedRight, singlelinecheck=false]{caption} 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -352,7 +357,7 @@
 \newcommand{\ua}{\mbox{u.\,a.\ }}
 \newcommand{\zB}{\mbox{z.\,B.\ }}
 \newcommand{\dahe}{\mbox{d.\,h.\ }}
-\newcommand{\iic}{\mbox{I\texttwosuperior C}} % I²C
+\newcommand{\iic}{\mbox{I\texttwosuperior C}} % IÂ²C
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SSE Thesis Document Template (Thomas Dietrich) %%%%%%%%%%%%%%%%%%%%%
