@@ -7,9 +7,9 @@ Abschließend wird ein Fazit gezogen, welches die Grundlage für den zu implementi
 
 \section{Energiespeicher}
 \label{sec:Energiespeicher}
-Im einleitenden Kapitel über Multicopter \todo{verweis}, wurde festgestellt, dass diese üblicherweise von Elektromotoren angetrieben werden. Elektromotoren benötigen eine elektrische Energiezufuhr, welche von Akkumulatoren bereit gestellt wird.
+Im einleitenden Kapitel über Multicopter \ref{sub:Multicopter}, wurde festgestellt, dass diese üblicherweise von Elektromotoren angetrieben werden. Elektromotoren benötigen eine elektrische Energiezufuhr, welche von Akkumulatoren bereit gestellt wird.
 
-Akkumulatorentypen lassen sich in Gruppen basierend auf ihren chemischen Bestandtteilen einteilen. Drei häufig verwendete Typen basieren auf Lithium-Ionen, Nickel und Bleisäure. Durch die gleiche Basis haben Akkumulatoren innerhalb einer Gruppe ähnliche Merkmale.
+Akkumulatorentypen lassen sich in Gruppen basierend auf ihren chemischen Bestandteilen einteilen. Drei häufig verwendete Typen basieren auf Lithium-Ionen, Nickel und Bleisäure. Durch die gleiche Basis haben Akkumulatoren innerhalb einer Gruppe ähnliche Merkmale.
 Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Wettbewerb oder Gesetze bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auf der Bekanntheit. Dessen ungeachtet wird  die Ladestation für aktuelle Multicopter konzeptioniert. \todo{weiterschreiben}
 
 \subsection{Bleisäure Akkumulatoren}
@@ -45,27 +45,127 @@ Das Ladeverfahren mit dem ein Akkumulator aufgeladen wird beeinflusst diesen maß
 Lithium-Ionen Akkumulatoren reagieren sensibel auf Überladung oder zu hohe Spannung. Die chemischen Bestandteile werden beschädigt und die Leistung des Energiespeichers fällt ab. Ein einfacher Ladevorgang mit einer konstanten Stromstärke kommt deshalb nicht in Frage. Je näher der Füllstand der Kapazität des Akkumulators kommt, desto größer wird die Spannung. Lithium-Polymer Akkumulatoren haben üblicherweise eine Maximalspannung von 4,2 V, eine Überschreitung verursacht Schäden und reduziert die Lebensdauer dramatisch.
 
 Das üblicherweise genutzte Ladeverfahren, um sowohl eine möglichst hohe Ladegeschwindigkeit, als auch die Lebensdauer der Akkumulatoren zu sichern nennt sich constant current constant voltage CCCV. \todo{Name}
-Dieses Verfahren besteht aus zwei Phasen. In der ersten Phase (CC) wird der leere Akkumulator mit einer konstanten Stromstärke beladen. Im Verlauf des Ladevorgangs steigt die Spannung an. Die Füllmenge des Akkumulators steigt linear über die Zeit an. Der Übergang zur zweiten Phase (CV) findet statt, sobald die Maximalspannung (für LiPo's 4,2V) erreicht ist. Zu diesem Zeitpunkt ist der Akkumulator mit ~70-80 Prozent \todo{Prozent}, seiner Kapazität geladen. 
+Dieses Verfahren besteht aus zwei Phasen. In der ersten Phase (CC) wird der leere Akkumulator mit einer konstanten Stromstärke beladen. Im Verlauf des Ladevorgangs steigt die Spannung an. Die Füllmenge des Akkumulators steigt linear über die Zeit an. Der Übergang zur zweiten Phase (CV) findet statt, sobald die Maximalspannung (für LiPo's 4,2V) erreicht ist. Zu diesem Zeitpunkt ist der Akkumulator mit ~70-80 Prozent \todo{Prozent}, seiner Kapazität geladen.  
 In der zweiten Phase bleibt die Spannung konstant beim Maximalwert und die Stromstärke nimmt ab. Daraus folgt, dass die Ladegeschwindigkeit nun nicht mehr linear verläuft, sondern immer weiter abfällt, je stärker der Akkumulator geladen ist. 
 Phase zwei endet üblicherweise sobald eine festgelegte minimale Stromstärke (z.B. 100 mA) erreicht wurde. Der Akkumulator ist dann abhängig vom festgelegten Minimalwert gefüllt. 
 
+\todo{beispieldiagramm}
 
 \section{Beispielmessungen}
 \label{sec:Beispielmessungen}
-Die Ausführungen aus der Literatur geben einen Überblick über die Funktionsweise der Akkumulatoren und ihre Aufladung. Mit Hilfe der Beispielmessungen sollen Werte gefunden werden, die den Ladeverlauf realistisch abbilden.
+Die Ausführungen aus der Literatur geben einen Überblick über die Funktionsweise der Akkumulatoren und ihre Aufladung. Mit Hilfe der Beispielmessungen sollen Werte gefunden werden, die den Ladeverlauf realistisch abbilden. Für eine statistisch fundiertes Ladeverhalten müssten die Messungen erweitert werden. Die neun Testdatensätze weisen eine Reihe von Unsicherheiten auf. Es wurde nur ein Ladegerät und ein Akkumulator verwendet. Effekte die von einer verschiedenen Gesamtkapazität abhängen können deshalb nur vermutet und nicht nachgewiesen werden. Die geringe Anzahl der Versuche kann die Schwankungen der Testergebnisse nicht ausgleichen.
 
-Für die Messungen wurde ein Turnigy Accucell 6 Ladegerät verwendet, welches das CCCV Verfahren benutzt, um unter anderem LiPo Akkumulatoren aufzuladen. Als Testakkumulator wird ein bereits für Drohnenflüge gebrauchter Akkumulator \todo{Akku} mit einer Maximalkapazität von 1800mAh verwendet. Der Akkumulator wurde vor jedem Ladevorgang mit dem Ladegerät im Modus "Discharge" mit 1A entladen.
-Für den Ladevorgang wurde der Akkumulator mit einer Stromstärke von 1 A, 2 A und 4 A geladen. Dieser Ablauf wurde dreimal wiederholt um die Wahrscheinlichkeit für zufällige Erscheinungen zu reduzieren.
+Für die Messungen wurde ein Turnigy Accucell 6 Ladegerät verwendet, welches das CCCV Verfahren benutzt, um unter anderem LiPo Akkumulatoren aufzuladen. Als Testakkumulator wird ein bereits für Drohnenflüge gebrauchter Akkumulator Zippy Compact mit einer Maximalkapazität von 1800 mAh verwendet. Der Akkumulator wurde vor jedem Ladevorgang mit dem Ladegerät im Modus "Discharge" mit 1A entladen.
+Für den Ladevorgang wurde der Akkumulator mit einer Stromstärke von 1 A, 2 A und 4 A geladen. Dieser Ablauf wurde dreimal wiederholt um die Wahrscheinlichkeit für zufällige Erscheinungen zu reduzieren. Das Ladegerät bietet eine Computerschnittstelle und kann den Ladeverlauf aufzeichnen. Aus den Diagrammen wurden der Endpunkt der ersten Phase und der Endpunkt des Ladevorgangs abgelesen, beispielhaft aufgezeigt in \ref{abb:Beispieldiagramm Messungen}. Aufgrund der begrenzten Qualität der aufgezeichneten Diagramme sind die Kapazitätswerte auf Vielfache von 5 gerundet, die Zeit ist abhängig von der Skalierung gerundet. Neben den abgelesenen Werte können der folgenden Tabelle \ref{tab:Ergebnisse Beispielmessungen} die Steigung der ersten Phase, die Dauer der zweiten Phase und das Verhältnis von beiden Phasen bezüglich der Zeit und der Kapazität entnommen werden. Die Darstellung der Berechnungen sind gerundet, für die weitere Verwendung werden jedoch die exakten Ergebnisse verwendet. Die genauen Werte und die Diagramme der Ladevorgänge können dem Anhang entnommen werden. \todo{Verweis}
+\begin{table}[ht]
+	\caption{Ergebnisse Beispielmessungen}
+	\renewcommand{\arraystretch}{2}
+	\resizebox{\linewidth}{!} {
+	\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|}
+		\hline
+		\textbf{Ladestrom (A)} & 1 & 1 & 1 & 2 & 2 & 2 & 4 & 4 & 4 \\ \hline \hline		
+		\textbf{Ende Phase 1 (s)} & 5848 & 5882 & 5649 & 2862 & 2996 & 2833 & 1410 & 1421 & 1361 \\ \hline
+		\textbf{Ende Phase 1 (mAh)} & 1620 & 1620 & 1560 & 1580 & 1660 & 1560 & 1550 & 1565 & 1500  \\ \hline
+		\textbf{Ende Ladevorgang (s)} & 6330 & 6413 & 6031 & 3589 & 3723 & 3589 & 2276 & 2277 & 2175 \\ \hline
+		\textbf{Ende Ladevorgang (mAh)} & 1670 & 1685 & 1600 & 1700 & 1765 & 1660 & 1765 & 1740 & 1700 \\ \hline \hline
+		\textbf{Steigung Phase 1  (mAh/s)} & 0,28 & 0,28 & 0,28 & 0,55 & 0,55 & 0,55 & 1,10 & 1,10 & 1,10  \\ \hline
+		\textbf{Dauer Phase 2 (s)} & 482 & 531 & 382 & 727 & 727 & 756 & 866 & 856 & 814  \\ \hline
+		\textbf{Phase 1 / Phase 2 (s/s)} & 0,92 & 0,92 & 0,94 & 0,80 & 0,80 & 0,79 & 0,62 & 0,62 & 0,63  \\ \hline
+		\textbf{Phase 1 / Phase 2 (mAh/mAh)} & 0,97 & 0,96 & 0,98 & 0,93 & 0,94 & 0,94 & 0,88 & 0,90 & 0,88  \\ \hline
+	\end{tabular}}
+	\label{tab:Ergebnisse Beispielmessungen}
+\end{table}
 
-\todo{Ergebnisstabelle, ein Diagramm} 
+\begin{figure}[H]
+	\caption{Messung 4A Ladestrom mit Phasenkennzeichnung}
+	\includegraphics[width=\textwidth]{images/Balance_4A_2}
+	\label{abb:Beispieldiagramm Messungen}
+\end{figure}
 
 
+\section{Algorithmus Entwicklung}
+\label{sec:Algorithmus Entwicklung}
+
+Für die Implementierung muss der Ladeverlauf modelliert werden. Relevant ist die Kapazität abgetragen über die Zeit. 
+Im folgenden Abschnitt wird die Entwicklung des Algorithmus für den Ladevorgang präsentiert. Nachdem für beide Phasen eine geeignete Approximation gefunden wurde, werden die errechneten Werte mit den gemessenen Werten verglichen, um die Genauigkeit sichtbar zu machen.
+
+Die erste Phase lässt sich durch eine lineare Funktion bestimmen. Die errechneten Werte für die Steigung schwanken minimal in der 3. Nachkommastelle. Die Kapazität $C$ (in mAh) hängt von der Ladestromstärke $I$ (in A) und der Ladezeit $t$ (in s) ab.
+
+\begin{equation}
+	C(t) = 0,2754 * I * t
+\end{equation}
+
+Darüber hinaus muss der Endzeitpunkt $t_{E1}$ der ersten Phase bestimmt werden. Dieser hängt von $I$ und der Gesamtkapazität der Akkumulators $C_{max}$ ab. \todo{erklärung}
+
+\begin{equation}
+	\begin{split}
+	C(t_{E1}) = (-0,0291 * I + 1) * C_{max} \\
+	t_{E1} = (-0,0291 * I + 1) * \frac{C_{max}}{0,2754 * I}
+	\end{split}
+\end{equation}
+
+Die zweite Phase wird unabhängig von der ersten Phase betrachtet, deshalb startet diese ebenfalls bei $t = 0$. Ihr Verlauf kann wie in \ref{abb:Beispieldiagramm Messungen} gezeigt durch eine nach oben begrenzte Wachstumsfunktion modelliert werden. Damit das Maximum erreicht werden kann, wird $C_{max}$ mit dem selbst gewählten Wert $a$ multipliziert. Der Wert für $a$ wurde dabei über Testeinsetzungen ermittelt und so gewählt, dass die Ergebnisse für die Ladung mit 2 A und 4 A möglichst genau sind.\todo{Quelle Wachstumsfunktion} 
+
+\todo{Johanna nach Formel fragen (a+1)?}
+\begin{equation}
+	\begin{split}
+		a = 0,0013 \\
+		C(t) = C_{max} * (a + 1) - (C_{max} * (a + 1) - B_{0}) * e^{-kt}
+	\end{split}
+\end{equation}
+
+$B_{0}$ ist die Startkapazität, welche dem Ende von Phase 1 entspricht.
+
+\begin{equation}
+B_{0} = C(t_{E1}) = (-0,0291 * I + 1) * C_{max}
+\end{equation}
+
+$k$ ist die Wachstumskonstante, welche von der linearen Steigung, dem Startzeitpunkt von der zweiten Phase und $a$ abhängt. \todo{?}
+
+\begin{equation}
+k = \frac{0,2754 * I}{C_{max} * (a + 0,0291 * I}
+\end{equation}
+
+Für die zweite Phase muss ebenfalls ein Endzeitpunkt bestimmt werden, welcher die Dauer der zweiten Phase angibt. Dieser Zeitpunkt ist erreicht wenn die Kapazität der Gesamtkapazität entspricht.
+\todo{ Johanna nach formel fragen, wo kommt R her?}
+\begin{equation}
+	\begin{split}
+		C(t_{E2}) = C_{max} \\
+		t_{E2} = ?
+	\end{split}
+\end{equation}
+
+Abschließend folgt eine Tabelle \ref{Vergleich Messungen und Formel} in der die gemessene Ladedauer, die berechnete Ladedauer und die Abweichung der beiden Phasen dargestellt wird. Zu sehen ist, dass die lineare Annäherung geringere Abweichungen aufweist. Zusätzlich ist die Dauer der ersten Phase länger, so dass die relativen Abweichungen noch geringer werden. Die maximale relative Abweichung tritt beim zweiten Versuch der 4 A Ladung auf und beträgt weniger als $2\%$.
+Die Abweichungen für Phase zwei sind bedeutend größer. Außerdem sieht man eine tendenziell abfallende Abweichung für wachsenden Ladestrom. Dies ist die Auswirkung des gewählten Parameters $a$. Dieser wurde unter Berücksichtigung einer abwärts Gewichtung des Ladestroms ausgesucht. Diese Gewichtung lässt sich auf die praktische Nutzung zurückführen. Der Ladestrom liegt üblicherweise zwischen 2 A und 4 A, weil die Ladedauer bei geringeren Strömen stark ansteigt und die Lebenszeit des Akkumulators nur geringfügig erweitert wird. Noch höhere Ladeströme führen zu einer deutlich verringerten Lebensdauer. \todo{Quelle Ladestrom | Lebensdauer}
+Dessen ungeachtet sind die relativen Abweichungen höher. Abgesehen von der 1 A Versuchsreihe weist der zweite Versuch einer Ladung mit 2 A eine relative Abweichung von ~9\% auf. 
+
+\todo{review values}
+\begin{table}[ht]
+	\caption{Vergleich Messungen und Formel}
+	\renewcommand{\arraystretch}{2}
+	\resizebox{\linewidth}{!} {
+		\begin{tabular}{|l||c|c|c||c|c|c||c|c|c|}
+			\hline
+			Ladestrom (A) & 1 & 1 & 1 & 2 & 2 & 2 & 4 & 4 & 4 \\ \hline \hline		
+			Dauer Phase 1 (s) & 5848 & 5882 & 5649 & 2862 & 2996 & 2833 & 1410 & 1421 & 1361 \\ \hline
+			Dauer Phase 1 Formel (s) & 5887 & 5940 & 5641 & 2906 & 3018 & 2838 & 1416 & 1396 & 1364 \\ \hline
+			\textbf{Abweichung} & \textbf{-39} & \textbf{-58} & \textbf{8} & \textbf{-44} & \textbf{-22} & \textbf{-5} & \textbf{-6} & \textbf{25} & \textbf{-3} \\ \hline
+			Dauer Phase 2 (s) & 482 & 531 & 382 & 727 & 727 & 756 & 866 & 856 & 814  \\ \hline
+			Dauer Phase 2 Formel (s) & 581 & 586 & 557 & 702 & 729 & 686 & 850 & 838 & 818  \\ \hline
+			\textbf{Abweichung} & \textbf{-99} & \textbf{-55} & \textbf{-175} & \textbf{25} & \textbf{-2} & \textbf{70} & \textbf{16} & \textbf{22} & \textbf{-4} \\ \hline
+			Gesamt (s) & 6330 & 6413 & 6031 & 3589 & 3723 & 3589 & 2276 & 2277 & 2175 \\ \hline
+			Gesamt Formel (s) & 6469 & 6527 & 6197 & 3609 & 3747 & 3524 & 2265 & 2233 & 2182 \\ \hline
+			\textbf{Abweichung} & \textbf{-139} & \textbf{-114} & \textbf{-166} & \textbf{-20} & \textbf{-24} & \textbf{65} & \textbf{11} & \textbf{44} & \textbf{-7} \\ \hline
+	\end{tabular}}
+	\label{tab:Vergleich Messungen und Formel}
+\end{table}
 
 \section{Fazit}
 \label{sec:Fazit}
+Die Literatur und Testmessungen bringen ähnliche Ergebnisse zum Vorschein. Es wird deutlich, dass der Ladevorgang in der ersten Phase linear verläuft und abhängig von der verwendeten Stromstärke ist. Die Dauer dieser Phase kann durch eine höhere Ladestromstärke proportional verringert werden. 
+Die Kapazität des Akkumulators die am Ende der ersten Phase erreicht wurde sinkt mit steigender Stromstärke. In den Testreihen lag der Start zwischen 88\% und 97\%. In der Literatur findet werden Werte zwischen 75\% und 80\% für den Phasenwechsel angegeben
+\cite[1]{Hsieh.1999} \cite[1]{Yan.2010}. Diese Werte würden nach dem angenommenen linearen Zusammenhang bei ~8 A Ladestrom auftreten. Möglicherweise wurde bei diesen Angaben eine ähnliche Größenordnung verwendet. Darüber hinaus könnten auch die Akkumulatorbauarten die genauen Werte beeinflussen. Wenn beispielsweise der mit Nennwert 1800 mAh verwendete Akkumulator eine größere Kapazität hat und diese nur nicht aufgeladen wird, um den Akkumulator zu schonen, könnte sich der relative Wert verschieben. Zusammengefasst sind die Werte für den Phasenwechsel ungenau, können aber im Zusammenhang mit den Literaturangaben erklärt werden.
 
-Die Literatur und Testmessungen bringen ähnliche Ergebnisse zum Vorschein. Es wird deutlich, dass der Ladevorgang in der ersten Phase linear verläuft und abhängig von der verwendeten Stromstärke ist. Die Dauer dieser Phase kann durch eine höhere Stromstärke verringert werden. 
-Die Kapazität des Akkumulators zum Start der zweiten Phase ist in der Literatur und den Testmessungen verschieden. Während in der verwendeten Literatur 70-80  \todo{Prozent} angegeben sind, startet Phase zwei in den Testmessungen erst bei ~95 \todo{Wert und Prozent}. Möglicherweise ist die Nennkapazität des Akkumulators (1800mAh) geringer, als der wirkliche Maximalwert. Der erzeugte Puffer sorgt dafür, dass erstens der Ladevorgang stark beschleunigt wird und zweitens, dass der Akkumulator nicht vollständig geladen werden kann. Da die Lebensdauer des Akkumulators durch vollständiges Entladen und Laden stark abnimmt, kann der Hersteller damit für eine größere Lebensdauer garantieren.
+Die eigenen Beispielwerte enthalten eine Reihe von Unsicherheiten. Für einen statistisch nachweisbaren Algorithmus müsste die Testreihe stark ausgebaut werden. Das Spektrum der verwendeten Akkumulatoren, Ladegeräte, Ladeströme und Nennkapazitäten sollte erweitert werden. Dessen ungeachtet werden die ausgearbeiteten Formeln in die Simulation integriert. Gegenüber einer strikt linearen Aufladung implementiert der vorgestellte Algorithmus einen realistischeren Ladeverlauf. In der zweiten Phase nimmt die Menge der pro Zeiteinheit geladenen Kapazitätseinheiten ab. Je nach angelegtem Ladestrom kann so für einen relativ kleinen Kapazitätsanteil trotzdem ein großer relativer Zeitanteil nötig sein.
 
-Für die Implementierung der Ladestation werden Näherungswerte der Beispielmessungen verwendet.
-\todo{Nährwerte}
+In der Implementierung wird der oben vorgestellte Algorithmus verwendet. Dennoch sollte die Genauigkeit in Frage gestellt werden und eine Verbesserung ist erstrebenswert.

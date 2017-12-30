@@ -63,7 +63,7 @@ Der Anschluss eines Multicopters an die Ladestation benötigt eine Kommunikations
 \label{sec:realistisches Ladeverhalten}
 Zentrales Element einer Ladestation ist der zugehörige Ladealgorithmus. Im Kapitel über das Ladeverhalten (Kapitel \ref{ch:Ladeverhalten}) wurde bereits festgestellt, dass Akkumulatoren und die zugehörigen Ladealgorithmen zu aktuellen Forschungsthemen gehören. Während der Konzeptionierung von Software ist es essentiell die Erweiterbarkeit und Austauschbarkeit der einzelnen Komponenten zu beachten. 
 Ein Interface stellt eine Beschreibung für eine zukünftige Implementierung bereit. Es werden Methoden definiert, welche von den erbenden Klassen zwingend implementiert werden müssen. Dadurch wird sichergestellt, dass die unterschiedlichen Implementierungen eines Interfaces untereinander kompatibel sind. Für den Ladealgorithmus werden ein Interface IChargeAlgorithm und eine Implementierung davon ChargeAlgorithmCCCV konzeptioniert.
-Der verwendete Ladealgorithmus kann während der Initialisierung spezifiziert werden und in eine Eigenschaft der Ladestation gespeichert werden. Für den Algorithmus relevante Eigenschaften müssen an dieser Stelle übergeben werden, so auch die verwendete Stromstärke, welche maßgebend Einfluss auf die Ladegeschwindigkeit hat. Anschließend kann über die Methode calculateChargeAmount() die zu ladende Menge für einen Zeitraum abgefragt werden. Die Methode calculateChargeTime() hingegen errechnet für einen Zielladezustand die benötigte Zeit.
+Der verwendete Ladealgorithmus wird während der Initialisierung spezifiziert und in eine Eigenschaft der Ladestation gespeichert. Für den Algorithmus relevante Eigenschaften müssen an dieser Stelle übergeben werden, so auch die verwendete Stromstärke, welche maßgebend Einfluss auf die Ladegeschwindigkeit hat. Anschließend kann über die Methode calculateChargeAmount() die zu ladende Menge für einen Zeitraum abgefragt werden. Die Methode calculateChargeTime() hingegen errechnet für einen Zielladezustand die benötigte Zeit.
 
 Damit die Multicopter an der Ladestation geladen werden können müssen diese von den Warteplätzen auf die Ladeplätze verschoben werden. Dafür muss bei jeder Aktualisierungsnachricht die Methode scheduleChargeSpots() ausgelöst werden, dort werden fertig geladene Multicoper in den entsprechenden Container verschoben und anschließend die freien Warteplätze gefüllt.
 Die Auswahl des nächsten zu ladenden Multicopters ist in eine weitere Methode getNextWaitingObjectIterator() ausgelagert. Diese Auslagerung soll bei einem komplexen Auswahlalgorithmus die Gesamtkomplexität der Anwendung reduzieren. Im trivialsten Fall wird hier nur das erste Objekt aus dem Warteplätzecontainer ausgewählt.
@@ -72,7 +72,8 @@ Nachdem die Ladeplätze gefüllt wurden, wird die Methode charge() aufgerufen. Die
 \todo{diagramm}
 
 \section{Reservierungen und Vorhersagen}
-Für andere Netzwerkteilnehmer ist die Information wie ein potenzieller Ladeprozess verlaufen würde wohlmöglich interessant, um entscheiden zu können ob dieser wahrgenommen wird. Die Ladestation im aktuellen Zustand könnte Vorhersagen über die vermutliche Ladedauer abgeben und dabei alle in den Warte- und Ladecontainern befindlichen Multicopter einbeziehen. Neue Multicopter können allerdings ohne vorherige Information jederzeit eintreffen und der Warteliste hinzugefügt werden. Vorhersagen für Multicopter die noch nicht eingetroffen sind, werden dadurch entwertet und nicht verlässlich. 
+\label{sec:Reservierungen und Vorhersagen}
+Für andere Netzwerkteilnehmer ist die Information wie ein potenzieller Ladeprozess verlaufen würde notwendig, um entscheiden zu können, ob dieser wahrgenommen wird. Die Ladestation im aktuellen Zustand könnte Vorhersagen über die vermutliche Ladedauer abgeben und dabei alle in den Warte- und Ladecontainern befindlichen Multicopter einbeziehen. Neue Multicopter können allerdings ohne vorherige Information jederzeit eintreffen und der Warteliste hinzugefügt werden. Vorhersagen für Multicopter die noch nicht eingetroffen sind, werden dadurch entwertet und sind nicht verlässlich. 
 Damit die Ladestation ihre Vorhersagen einhalten kann, muss den Multicoptern eine Möglichkeit gegeben werden, einen Platz auf der Warteliste zu reservieren, ohne das diese bereits an der Ladestation angekommen sind. 
 Reservierungen werden per Nachricht eingeleitet. Die Nachricht enthält dabei Informationen über die voraussichtliche Ankunftszeit, den aktuellen Ladezustand und den voraussichtlichen Verbrauch bis zur Ankunft an der Ladestation. Darüber hinaus ist ein prozentualer Zielzustand enthalten. Dadurch wird den Multicoptern die Möglichkeit geboten nur eine Teilaufladung zu erhalten.
 Diese Informationen, der Absender und der Zeitpunkt der Reservierung müssen innerhalb der Ladestation gespeichert werden. Dadurch kann bereits zum Zeitpunkt der Reservierung eine Vorhersage über die Ladedauer getroffen werden. Da für jede Vorhersage die Fertigstellungszeitpunkte der vorherigen Multicopter benötigt werden, wird dieser Zeitpunkt mit im Container abgespeichert.
@@ -89,9 +90,29 @@ Die Vorhersagen sind in zwei unterschiedliche Formen vorgesehen. Für die interne
 
 \begin{figure}[H]
 	\caption{Containerklasse UML-Klassendiagramm}
-	\adjincludegraphics[trim={1.5cm {.70\height} 7cm {.05\height}},clip]{images/ChargingNodeSpotElement}
+	\adjincludegraphics[trim={1.5cm {.60\height} 7cm {.05\height}},clip]{images/ChargingNodeSpotElement}
 \end{figure}
 
+\section{Anfrage für Multicopter}
+\label{sec:Anfrage für Multicopter}
+Damit Anfragen für Ersatzmulticopter möglich sind, kann die Ladestation eine entsprechende individuelle Nachricht empfangen und interpretieren. In dieser Nachricht ist eine Mindestkapazität enthalten.
+In der Methode getSufficientlyChargedUAV() werden die Listen mit wartenden, fertig geladenen und momentan ladenden Multicoptern ausgewertet. Ausgewählt wird der Multicopter mit der geringsten Kapazität, welche dennoch die Mindestanforderung erfüllt.
+Anschließend wird eine Nachricht mit der Information über den ausgewählten Multicopter an den Absender zurückgesendet.
+
+\todo{diagramm}
+
+\section{Nutzungsstatistiken}
+\label{sec:Nutzungsstatistiken}
+Das Simulationsframework unterstützt die Aufnahme und Verarbeitung von statistischen Daten. Für die Aufnahme müssen Variablen im Objekt definiert und initialisiert werden. Darüber hinaus müssen die Variablen in der initialize() Methode des jeweiligen Objektes als statistische Daten gekennzeichnet werden. Durch die Nutzung der vom Framework zur Verfügung gestellten Mittel können die Daten zur Laufzeit aus den Objekten ausgelesen werden und stehen für die Nutzung in der graphischen Oberfläche zur Verfügung. Zusätzlich können ausführliche Berichte und Diagramme über die Werte im Verlauf der Simulation automatisch erstellt werden.
+
+In der Ladestation werden die Anzahl der Reservierungen, der angekommenen Multicopter und der fertig geladenen Multicopter erfasst. Darüber hinaus wird die von der Ladestation aufgeladene Energie protokolliert. Dafür müssen 
+\todo{wo werden Statistiken aufgenommen?}
+
+\section{Ressourcenverwaltung}
+\label{sec:Ressourcenverwaltung}
+Für das Hinzufügen eines Energiespeichers zur Ladestation, kann auf die bestehende Architektur zugegriffen werden. Die Ladestation wird mit einem Objekt des Typs Battery assoziiert. Während der Initialisierung wird die Maximalkapazität aus der Konfiguration ausgelesen. Darauf basierend wird das Akkumulatorobjekt erstellt. Dieses stellt die Funktionalität eines begrenzten und unbegrenzten Energiespeichers zur Verfügung.
+Innerhalb des Ladeprozesses in der charge() Methode wird die Batterie des Multicopters geladen und die Batterie der Ladestation entladen. Die Entladung wird dabei durch einen zwischen 0 und 1 liegenden Effektivitätsparameter geteilt. Dieser Parameter kann konfiguriert werden. Während des Ladeprozesses wird geprüft, ob die Restladung der Station ausreichend ist und andernfalls eine Fehlermeldung erzeugt.
+\todo{Diagramm}
 
 
 

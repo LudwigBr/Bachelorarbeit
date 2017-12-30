@@ -1,10 +1,262 @@
+\chapter{Implementierung} 
+\label{ch:Implementierung}
+Im folgenden Kapitel werden einzelne Teile der Implementierung gezeigt und erläutert. Der gesamte Quellcode kann dem Anhang entnommen werden. Die Struktur entsteht durch die am Ende des letzten Kapitels gezeigten UML-Klassendiagramme.
 
-\chapter{Results and Comparative Analysis} 
-\label{ch:Results and Comparative Analysis}
-In this chapter an analysis and evaluation of the TimeNET implementation of the multi-trajectory algorithm is presented. First, an analysis of its parameters is conducted and for this purpose a model is designed. Execution of this model with all possible values of different multi-trajectory parameters are shown, and the best combination of parameters is found. Afterwards, a comparative analysis of the implementation with the other three TimeNET implemented simulation algorithms is presented. This analysis is based on a previous research conducted by the author of the current work, \textit{Rare-Event Algorithms Analysis and Simulation} \cite{canabal:rareeventproject}. Its goals were to evaluate RESTART TimeNET implementation and the implemented heuristic for its importance function. The multi-trajectory simulation results are compared together with the results obtained from the earlier work, followed by an analysis of how variations of the model properties exert different impact on the execution time of the algorithms. Finally, a non-Markovian model is analyzed and different simulations executed on it are presented.
+\section{Ankommende Multicopter}
+\label{sec:Ankommende Multicopter}
 
+\begin{lstlisting}
+void ChargingNode::handleMessage(cMessage* msg)
+{
+	if (msg->isName("startCharge")) {
+		EV_INFO << "MobileNode is ready to get charged" << endl;
+		MobileNode *mn = check_and_cast<MobileNode*>(msg->getSenderModule());
+		appendToObjectsWaiting(mn, 100.0);
+		
+		if (not active) {
+			msg->setName("update");
+			scheduleAt(simTime(), msg);
+			active = true;
+		}
+	}
+	else if (msg->isName("reserveSpot")) {
+		ReserveSpotMsg *rsmsg = check_and_cast<ReserveSpotMsg*>(msg);
+		MobileNode *mn = check_and_cast<MobileNode*>(msg->getSenderModule());
+		appendToObjectsWaiting(mn, rsmsg->getTargetPercentage(), simTime(), rsmsg->getEstimatedArrival(), rsmsg->getConsumptionTillArrival());
+		reservations++;
+		EV_INFO << "Mobile Node is on the way to CS. Spot reserved for: " << rsmsg->getEstimatedArrival() << endl;
+		
+		if (not active) {
+			msg->setName("update");
+			scheduleAt(simTime(), msg);
+			active = true;
+		}
+	}
+	//...
+}
+\end{lstlisting}
 
-\section{Multi-Trajectory Results}
-In this section the results from the multi-trajectory simulations are compared with the results from the previous work. The multi-trajectory algorithm has been executed with the default parameters over all variations of the models, but only the most significant results are presented here. 
+\begin{lstlisting}
+/**
+* Appends a MobileNode to the waiting queue.
+* Estimated wait and charge duration get calculated and appended.
+* Default values take place when there is no reservation and the object is already present (object appeared with startCharge message):
+*/
+void ChargingNode::appendToObjectsWaiting(MobileNode* mobileNode, double targetPercentage, simtime_t reservationTime, simtime_t estimatedArrival, double consumption)
+{
+	// check if the waiting queue size would be exceeded
+	if (objectsWaiting.size() >= spotsWaiting && spotsWaiting != 0) {
+		EV_INFO << "All spots for waiting (" << spotsWaiting << ") are already taken." << endl;
+		return;
+	}
+	// check if given object is already in waiting queue
+	if (isInWaitingQueue(mobileNode)) {
+		EV_INFO << "Mobile Node is already in waiting Queue." << endl;
+		return;
+	}
+	
+	// generate a new waiting element with estimated charge and waiting times
+	// substract consumption which will occur between reservation and the charging process
+	double chargeTime = chargeAlgorithm->calculateChargeTime(mobileNode->getBattery()->getRemaining() - consumption, mobileNode->getBattery()->getCapacity(), targetPercentage);
+	ChargingNodeSpotElement* element = new ChargingNodeSpotElement(mobileNode, chargeTime, getEstimatedWaitingSeconds(), targetPercentage);
+	
+	// set estimatedArrival and reservationTime if not 0, otherwise simTime() will be used as default value
+	if (!estimatedArrival.isZero()) {
+		element->setEstimatedArrival(estimatedArrival);
+	}
+	if (!reservationTime.isZero()) {
+		element->setReservationTime(reservationTime);
+	}
+	
+	objectsWaiting.push_back(element);
+	EV_INFO << "MobileNode got appended to a waiting spot." << endl;
+}
+\end{lstlisting}
 
-\input{sourcecode/Tables_Comparative_Results}
+\section{Aktualisierung der Ladestation}
+\label{sec:Aktualisierung der Ladestation}
+
+\subsection{Aktualisierungsstart}
+\label{subsec:Aktualisierungsstart}
+
+\begin{lstlisting}
+void ChargingNode::updateState()
+{
+fillChargingSpots();
+if (objectsCharging.empty()) {
+return;
+}
+if (battery.isEmpty()) {
+EV_WARN << "The battery of the Charging Station is exhausted!";
+return;
+}
+charge();
+clearChargingSpots();
+fillChargingSpots();
+rearrangeChargingSpots();
+}
+\end{lstlisting}
+
+\subsection{Ladeplätze besetzen}
+\label{subsec:Ladeplätze besetzen}
+
+\begin{lstlisting}
+/**
+* Populates the charging nodes.
+*/
+void ChargingNode::fillChargingSpots()
+{
+// when there are no waiting objects, the method does nothing
+int availableNodes = numberWaitingAndPhysicallyPresent();
+if (availableNodes == 0) {
+return;
+}
+
+// get the next waiting object
+std::deque<ChargingNodeSpotElement*>::iterator nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+
+// loop through empty charging spots and fill them with waiting objects
+while (spotsCharging > objectsCharging.size() && availableNodes > 0) {
+(*nextWaitingObject)->setPointInTimeWhenChargingStarted(simTime());
+objectsCharging.push_back(*nextWaitingObject);
+objectsWaiting.erase(nextWaitingObject);
+nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+availableNodes = numberWaitingAndPhysicallyPresent();
+}
+}
+\end{lstlisting}
+
+\subsection{Ladeplätze aufladen}
+\label{subsec:Ladeplätze aufladen}
+
+\begin{lstlisting}
+/**
+* Charges the nodes placed on the charging spots depending on the last update.
+*/
+void ChargingNode::charge()
+{
+for (unsigned int i = 0; i < objectsCharging.size(); i++) {
+EV_INFO << "UAV in slot " << i << " is currently getting charged. Currently Remaining: " << 		objectsCharging[i]->getNode()->getBattery()->getRemaining()	<< endl;
+
+simtime_t currentTime = simTime();
+double chargeAmount = chargeAlgorithm->calculateChargeAmount(objectsCharging[i]->getNode()->getBattery()->getRemaining(),
+objectsCharging[i]->getNode()->getBattery()->getCapacity(), (currentTime - std::max(lastUpdate, objectsCharging[i]->getPointInTimeWhenChargingStarted())).dbl());
+objectsCharging[i]->getNode()->getBattery()->charge(chargeAmount);
+battery.discharge(chargeAmount / this->chargeEffectivenessPercentage);
+usedPower += chargeAmount / this->chargeEffectivenessPercentage;
+chargedPower += chargeAmount;
+}
+}
+\end{lstlisting}
+
+\subsection{Ladeplätze leeren}
+\label{subsec:Ladeplätze leeren}
+
+\begin{lstlisting}
+/*
+* Remove nodes from charging spot when done
+*/
+void ChargingNode::clearChargingSpots()
+{
+std::deque<ChargingNodeSpotElement*>::iterator objectChargingIt = objectsCharging.begin();
+
+while (objectChargingIt != objectsCharging.end()) {
+if ((*objectChargingIt)->getNode()->getBattery()->getRemainingPercentage() >= (*objectChargingIt)->getTargetCapacityPercentage()) {
+EV_INFO << "MobileNode (Id: " << (*objectChargingIt)->getNode()->getId() << ") is charged to target: "
+<< (*objectChargingIt)->getTargetCapacityPercentage() << endl;
+// Send wait message to node
+MobileNode* mobileNode = (*objectChargingIt)->getNode();
+send(new cMessage("wait"), getOutputGateTo(mobileNode));
+// Send a message to the node which signalizes that the charge process is finished
+send(new cMessage("nextCommand"), getOutputGateTo(mobileNode));
+// Push fully charged nodes to the corresponding list
+objectsFinished.push_back((*objectChargingIt)->getNode());
+objectsCharging.erase(objectsCharging.begin());
+// increment the statistics value
+chargedMobileNodes++;
+}
+objectChargingIt++;
+}
+}
+
+\end{lstlisting}
+
+\subsection{Ladeplätze organisieren}
+\label{subsec:Ladeplätze organisieren}
+
+\begin{lstlisting}
+/*
+* Exchange waiting spots when needed due to earlier reservation or the fast charge mechanismn
+*/
+void ChargingNode::rearrangeChargingSpots()
+{
+// this method does nothing when either there is no object charged currently or there is no available waiting object
+if (objectsCharging.size() == 0 || numberWaitingAndPhysicallyPresent() == 0) {
+return;
+}
+
+// get the next waiting object
+std::deque<ChargingNodeSpotElement*>::iterator nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+
+// loop through currently used spots and check for earlier reservations
+// when an earlier reservation time occurs, throw out the currently charged node and push it back to the waiting objects
+std::deque<ChargingNodeSpotElement*>::iterator objectChargingIt = objectsCharging.begin();
+while (objectChargingIt != objectsCharging.end()) {
+if ((*objectChargingIt)->getReservationTime() > (*nextWaitingObject)->getReservationTime()
+|| (prioritizeFastCharge
+&& static_cast<double>((*nextWaitingObject)->getNode()->getBattery()->getRemainingPercentage())
+< getChargeAlgorithm()->getFastChargePercentage()
+&& (static_cast<double>((*objectChargingIt)->getNode()->getBattery()->getRemainingPercentage())
+>= getChargeAlgorithm()->getFastChargePercentage()))) {
+appendToObjectsWaiting((*objectChargingIt)->getNode(), (*objectChargingIt)->getTargetCapacityPercentage(),
+(*objectChargingIt)->getReservationTime());
+objectsCharging.erase(objectChargingIt);
+(*nextWaitingObject)->setPointInTimeWhenChargingStarted(simTime());
+objectsCharging.push_back(*nextWaitingObject);
+objectsWaiting.erase(nextWaitingObject);
+nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+}
+objectChargingIt++;
+}
+}
+\end{lstlisting}
+
+\subsection{Zeit für nächste Update}
+\label{subsec:Zeit für nächste Update}
+
+\begin{lstlisting}
+/**
+* Calculates the seconds till the next event (a node being done with charging or the arrival time of an reservation is met).
+* When there is no next event and the timeStep is set to 0 a placeholder value (10 seconds) is returned.
+*
+* @return double, seconds till next event || timeStep if not 0 || 10 seconds as fallback
+*/
+double ChargingNode::nextNeededUpdate()
+{
+simtime_t currentTime = simTime();
+double nextEvent = -1;
+// get time when the next object is successfully charged
+for (unsigned int i = 0; i < objectsCharging.size(); i++) {
+if (objectsCharging[i]->getPointInTimeWhenDone().dbl() - currentTime.dbl() < nextEvent || nextEvent == -1) {
+nextEvent = objectsCharging[i]->getPointInTimeWhenDone().dbl() - currentTime.dbl();
+}
+}
+
+// get next (furure) arrival time for reservations
+for (unsigned int i = 0; i < objectsWaiting.size(); i++) {
+if ((objectsWaiting[i]->getEstimatedArrival() < nextEvent && objectsWaiting[i]->getEstimatedArrival() >= simTime()) || nextEvent == -1) {
+nextEvent = objectsWaiting[i]->getPointInTimeWhenDone().dbl() - currentTime.dbl();
+}
+}
+
+return (nextEvent != -1) ? nextEvent : (timeStep ? timeStep : 10);
+}
+
+\end{lstlisting}
+
+\section{Ladealgorithmus}
+\label{subsec:Ladealgorithmus}
+
+\begin{lstlisting}
+
+\end{lstlisting}
