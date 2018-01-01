@@ -5,6 +5,10 @@ Im folgenden Kapitel werden einzelne Teile der Implementierung gezeigt und erläu
 \section{Ankommende Multicopter}
 \label{sec:Ankommende Multicopter}
 
+Es werden zwei Möglichkeiten angeboten, wie Multicopter einen Ladeplatz erhalten können. Erstens kann eine Nachricht mit dem Namen startCharge ohne weitere Parameter versendet werden, sobald die Position der Ladestation erreicht wurde. Das aufzuladende Objekt wird hier mit der im zweiten Teil dieses Abschnitts erläuterten Methode appendToObjectsWaiting() an die Warteliste angehangen. Als Objekt wird der Absender der Nachricht angenommen, als erwarteter Zielzustand werden 100\% angenommen.
+Falls die Ladestation bis zu diesem Zeitpunkt nicht aktiv war, wird die regelmäßige Aktualisierungsroutine mit Hilfe einer ersten Nachricht mit dem Namen update aktiviert. Diese Nachricht wird zur aktuellen Simulationszeit verschickt und kommt durch mangelnde Nachrichtenverzögerung zum selben Zeitpunkt an und löst den ersten Ladevorgang und die erste Platzverteilung aus. 
+
+Die zweite Möglichkeit um einen Ladeplatz zugewiesen zu bekommen ist eine Reservierung zu tätigen. Dafür muss eine Nachricht mit dem Namen reserveSpot an die Ladestation gesendet werden. Diese muss vom Typ ReserveSpotMsg sein und Informationen über den gewünschten Zielzustand, die erwartete Ankunft und den erwarteten Energieverbrauch bis zur Ankunft enthalten. Der aktuelle Stand des Akkumulators kann direkt vom Objekt abgefragt werden und muss deshalb nicht verschickt werden. Vorteil einer Reservierung ist, dass die Warteliste nach dem Reservierungszeitpunkt sortiert wird. Außerdem wird damit der Ladestation eine bessere Vorhersage für andere Interessenten ermöglicht. Der Ablauf nach dem Empfang der Nachricht ist analog zur ersten Möglichkeit, mit dem Unterschied das die enthaltenen Informationen an die appendToObjectsWaiting() Methode übergeben werden. 
 \begin{lstlisting}
 void ChargingNode::handleMessage(cMessage* msg)
 {
@@ -35,6 +39,10 @@ void ChargingNode::handleMessage(cMessage* msg)
 	//...
 }
 \end{lstlisting}
+
+Die zu Beginn des Kapitels mehrfach referenzierte Methode appendToObjectsWaiting() hat den Zweck ein Objekt der Warteliste hinzuzufügen. Dabei muss ein Zeiger auf ein Objekt vom Typ MobileNode und ein gewünschter Zielladezustand in Prozent übergeben werden. Darüber hinaus werden im Fall einer Reservierung die Reservierungszeit, die erwartete Ankunft und der erwartete Verbauch bis zu zur Ankunft als Parameter übergeben.
+Zu Beginn der Methode wird geprüft, ob noch Warteplätze frei sind und ob das Objekt bereits in der Warteschlange ist. Sollte einer der beiden Fälle zutreffen wird eine entsprechende Fehlermeldung generiert und die Methode vorzeitig beendet. Anschließend wird ein Containerobjekt der Klasse ChargingNodeSpotElement erstellt. Dafür wird ein Zeiger auf das MobileNode Objekt, die Aufladezeit, die zu erwartende Wartezeit und der Zielzustand benötigt. Die Aufladezeit wird vom implementierten Ladealgorithmus berechnet, dafür wird der aktuelle Zustand und der zu erwartende Verbrauch berücksichtigt. Die Wartezeit wird in einer Hilfsmethode getEstimatedWaitingSeconds() berechnet. Das Ergebnis ist, falls die eine schnelle Aufladung priorisiert wird, nicht genau. Nach der Erstellung werden die Ankunftszeit und der Reservierungszeitpunkt mit je einer Setter-Methode gesetzt. Falls es sich um keine Reservierung handelt wird der Standardwert, welcher dem aktuellen Simulationszeitpunkt entspricht verwendet.
+Abschließend wird das erstellte Containerobjekt der Warteliste hinzugefügt und eine Bestätigungsmitteilung ausgegeben.
 
 \begin{lstlisting}
 /**
@@ -75,30 +83,35 @@ void ChargingNode::appendToObjectsWaiting(MobileNode* mobileNode, double targetP
 
 \section{Aktualisierung der Ladestation}
 \label{sec:Aktualisierung der Ladestation}
+\todo{Konzeptionierung?}
+Im Rahmen der diskreten eventbasierten Simulationsumgebung muss die Ladestation auf ein Event mit einem Aktualisierungsvorgang reagieren. Für die graphische Simulation wird zusätzlich eine zeitbasierte Aktualisierung implementiert, so dass regelmäßige Statusmitteilungen ausgegeben werden können.
+Zu Beginn dieser Sektion wird die updateState() Methode vorgestellt, welche den Rahmen des Aktualisierungsvorgangs bereitstellt. Der Ablauf wird grob erläutert. Im Anschluss werden die nötigen Schritte und ihr Ablauf vorgestellt. Dabei orientiert sich die Struktur an dem Durchlaufzyklus eines Multicopters und es wird mit dem Hinzufügen zu einem Ladeplatz begonnen.
 
-\subsection{Aktualisierungsstart}
-\label{subsec:Aktualisierungsstart}
+Die Aktualisierung beginnt nach dem Empfang einer Nachricht mit dem Namen update. Die updateState() Methode, welche jede von der GenericNode erbende Klasse implementieren muss wird aufgerufen. Zu Beginn wird der Ladezustand der Station überprüft, falls keine weitere Energie zur Verfügung steht wird der restliche Ablauf direkt abgebrochen.
+Wenn die Ladeplätze besetzt sind werden diese im nächsten Schritt in der charge() Methode aufgeladen. Anschließend werden die bis zum Zielzustand geladenen Multicopter von den Ladeplätzen entfernt. Im Anschluss und unabhängig davon, ob in diesem Aktualisierungvorgang bereits Objekte geladen wurden, werden die Ladeplätze gefüllt. Nachdem alle Ladeplätze belegt sind oder keine weiteren wartenden Multicopter zur Verfügung stehen wir die Methode rearrangeChargingSpots() aufgerufen. In dieser Methode werden die Ladeplätze umverteilt. Wenn ein Objekt der Ladeliste später reserviert hat, als ein Objekt der Warteliste, werden diese getauscht. Falls die Priorisierung der schnellen Aufladung aktiviert ist, kann hier eine nachträgliche Änderung der Ladeplätze erfolgen.
 
 \begin{lstlisting}
 void ChargingNode::updateState()
 {
-fillChargingSpots();
-if (objectsCharging.empty()) {
-return;
-}
-if (battery.isEmpty()) {
-EV_WARN << "The battery of the Charging Station is exhausted!";
-return;
-}
-charge();
-clearChargingSpots();
-fillChargingSpots();
-rearrangeChargingSpots();
+	if (battery.isEmpty()) {
+		EV_WARN << "The battery of the Charging Station is exhausted!";
+		return;
+	}
+	if (not objectsCharging.empty()) {
+		charge();
+		clearChargingSpots();
+	}
+	fillChargingSpots();
+	rearrangeChargingSpots();
 }
 \end{lstlisting}
 
 \subsection{Ladeplätze besetzen}
 \label{subsec:Ladeplätze besetzen}
+
+Damit die Multicopter aufgeladen werden können, müssen sie aus der Warteliste in die Ladeliste verschoben werden. Dies geschieht in der Methode fillChargingSpots(), welche während eines Aktualisierungsvorgangs nach dem Aufladen ausgelöst wird. Die Änderung der Plätze erfolgt erst nach der Aufladung, weil nur die Multicopter aufgeladen werden sollen, welche bereits bei der vorherigen Aktualisierung auf den Ladeplätzen waren. 
+Als erstes wird geprüft, ob sich Objekte in der Warteliste befinden, die bereits an der Ladestation angekommen sind. Reservierungen erscheinen auch in der Warteliste. Objekte können jedoch nur geladen werden wenn die Koordinaten des Objektes und der Ladestation übereinstimmen. Danach wird das nächste wartende Objekt ausgewählt. Die Priorisierung erfolg in der Methode getNextWaitingObjectIterator(), welche im zweiten Teil dieser Sektion erläutert wird. Diese Methode gibt einen Iterator zurück, welcher auf das entsprechende Containerobjekt zeigt. Anschließend wird eine Schleife durchlaufen, solange es freie Ladeplätze gibt und für die Aufladung bereite Objekte zur Verfügung stehen.
+Innerhalb der Schleife wird der Startzeitpunkt des Ladevorgangs mit Hilfe einer Setter-Methode dem Containerobjekt hinzugefügt. Anschließend wird der Multicopter an die Ladeliste angehangen und von der Warteliste entfernt. Am Ende der Schleife wird die Anzahl der zur Verfügung stehenden wartenden Objekte und der Zeiger auf den nächsten Container aktualisiert.
 
 \begin{lstlisting}
 /**
@@ -106,28 +119,73 @@ rearrangeChargingSpots();
 */
 void ChargingNode::fillChargingSpots()
 {
-// when there are no waiting objects, the method does nothing
-int availableNodes = numberWaitingAndPhysicallyPresent();
-if (availableNodes == 0) {
-return;
+	// when there are no waiting objects, the method does nothing
+	int availableNodes = numberWaitingAndPhysicallyPresent();
+	if (availableNodes == 0) {
+		return;
+	}
+	
+	// get the next waiting object
+	std::deque<ChargingNodeSpotElement*>::iterator nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+	
+	// loop through empty charging spots and fill them with waiting objects
+	while (spotsCharging > objectsCharging.size() && availableNodes > 0) {
+		(*nextWaitingObject)->setPointInTimeWhenChargingStarted(simTime());
+		objectsCharging.push_back(*nextWaitingObject);
+		objectsWaiting.erase(nextWaitingObject);
+		nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+		availableNodes = numberWaitingAndPhysicallyPresent();
+	}
 }
+\end{lstlisting}
 
-// get the next waiting object
-std::deque<ChargingNodeSpotElement*>::iterator nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
+Die Auswahl des nächsten wartenden Objekts erfolgt innerhalb der Methode getNextWaitingObjectIterator(). Diese erwartet als Parameter einen boolschen Wert, der angibt, ob eine schnelle Teilaufladung priorisiert werden soll. Der Rückgabewert ist ein Iterator, welcher ein Containerelement aus der Warteliste referenziert. Der Iterator kann in Schleifen Verwendung finden, ebenso kann durch Dereferenzierung das entsprechende Containerobjekt angesprochen werden. 
+Zu Beginn wird der Ergebnisiterator für das nächste wartende Objekt mit einem leeren Wert gefüllt. Da Iteratoren keinen NULL-Wert kennen wird dafür objectsWaiting.end() verwendet. Dieser Ausdruck kann verstanden werden, als das Element welches auf das letzte Element in der Warteliste folgt. Anschließend wird der Laufiterator mit dem ersten Wert der Warteliste initialisiert. Die darauffolgende Schleife durchläuft die gesamte Warteliste.
+Falls das Objekt sich nicht an der Ladestation befindet wird der Iterator inkrementiert und der Schleifendurchlauf abgebrochen. Das gleiche Ereignis tritt ein, falls eine Schnelle Aufladung priorisiert wird und das vom Laufiterator referenzierte Objekt über eine höhere Ladung verfügt, als vom Ladealgorithmus vorgeschrieben wird. Falls in einem Schleifendurchlauf der nächste Schritt erreicht wird und der Ergebnisiterator noch mit seinem Initialwert belegt ist, wird dieser mit dem aktuellen Laufiterator überschrieben. In der Auswahl soll anhand der Reservierungszeit priorisiert werden. Falls der Ergebnisiterator bereits belegt wurde, aber das referenzierte Objekt eine spätere Reservierungszeit aufweist, als das vom Laufiterator referenzierte Objekt, wird er ebenfalls überschrieben. Abschließend muss innerhalb der Schleife der Laufiterator inkrementiert werden, damit keine Endlosschleife entsteht.
 
-// loop through empty charging spots and fill them with waiting objects
-while (spotsCharging > objectsCharging.size() && availableNodes > 0) {
-(*nextWaitingObject)->setPointInTimeWhenChargingStarted(simTime());
-objectsCharging.push_back(*nextWaitingObject);
-objectsWaiting.erase(nextWaitingObject);
-nextWaitingObject = getNextWaitingObjectIterator(prioritizeFastCharge);
-availableNodes = numberWaitingAndPhysicallyPresent();
-}
+Wenn die Schleife komplett durchlaufen wurde, eine schnelle Aufladung priorisiert wurde und der Ergebnisiterator immernoch mit dem Initialwert belegt ist, erfolgt ein rekursiver Aufruf, in welchem der boolsche Parameter mit false übergeben wird. Dadurch werden Multicopter ausgewählt, welche die Grenzkapazität für eine schnelle Aufladung überschreiten. Dies tritt allerdings nur ein, wenn unter Berücksichtigung der Grenzkapazität keine wartendes Objekt gefunden wurde.
+Abschließend wird der Ergebnisiterator zurückgegeben. Solange sich ein Objekt in der Warteliste befindet, hat der Ergebnisiterator einen Inhalt, ansonsten wird der initiale NULL-Wert zurückgegeben.
+
+\begin{lstlisting}
+/**
+* Elements in the waiting queue get prioritized by their reservationTime.
+* When fastCharge is enbabled the top priority is that the object has less energy then the chargeAlgorithm is advertising as fastCharge.
+* Furthermore they need to be physically at the ChargingNode.
+* @return std::deque<ChargingNodeSpotElement*>::iterator to the next element in waiting queue which is physically present
+*/
+std::deque<ChargingNodeSpotElement*>::iterator ChargingNode::getNextWaitingObjectIterator(bool fastCharge)
+{
+	std::deque<ChargingNodeSpotElement*>::iterator next = objectsWaiting.end();
+	std::deque<ChargingNodeSpotElement*>::iterator objectWaitingIt = objectsWaiting.begin();
+	while (objectWaitingIt != objectsWaiting.end()) {
+		if (not isPhysicallyPresent((*objectWaitingIt)->getNode())) {
+			objectWaitingIt++;
+			break;
+		}
+		if (fastCharge
+		&& static_cast<double>((*objectWaitingIt)->getNode()->getBattery()->getRemainingPercentage()) > chargeAlgorithm->getFastChargePercentage()) {
+			objectWaitingIt++;
+			break;
+		}
+		if (next == objectsWaiting.end()
+		|| ((*objectWaitingIt)->getReservationTime() < (*next)->getReservationTime() && (*objectWaitingIt)->getEstimatedArrival() <= simTime())) {
+			next = objectWaitingIt;
+		}
+		objectWaitingIt++;
+	}
+	if (fastCharge && next == objectsWaiting.end()) {
+		return getNextWaitingObjectIterator(false);
+	}
+	return next;
 }
 \end{lstlisting}
 
 \subsection{Ladeplätze aufladen}
 \label{subsec:Ladeplätze aufladen}
+Nachdem die Multicopter einen Ladeplatz zugewiesen bekommen haben ist die Aufladung trivial. Zu Beginn der charge() Methode wird die aktuelle Zeit für den späteren Zugriff abgespeichert. Anschließend werden mit Hilfe einer for-Schleife alle Ladeplätze durchlaufen.
+In jedem Schleifendurchlauf wird die aufzuladende Kapazität berechnet werden. Dafür wird die Methode calculateChargeAmount(), welche jeder Ladealgorithmus durch das Interface implementieren muss, aufgerufen. Der Funktion werden der aktuelle Ladezustand, die Maximalkapaziät und die Anzahl der vergangenen Sekunden, seit der letzten Aktualisierung, übergeben. Für die Berechnung der vergangenen Zeit wird das Maximum aus der Eigenschaft lastUpdate und der im Containerobjekt gespeicherten Startzeit ausgewählt. Anschließend wird der entsprechende Wert von der aktuellen Zeit abgezogen. Das Ergebnis ist die Zeit in Sekunden, welche der Multicopter seit seiner letzten Aufladung auf dem Ladeplatz verbracht hat. Die Auswahl aus der letzten Aktualisierungszeit und der Ladestartzeit des jeweiligen Multicopters stellt sicher, dass ein Multicopter nicht versehentlich für einen Zeitraum aufgeladen wird, in dem dieser nicht auf dem Ladeplatz war. 
+Nachdem die Ladekapazität berechnet wurde, wird eine Statusmitteilung auf der Konsole ausgegeben und anschließend der Akkumulator des Multicopters um den Wert aufgeladen.
+Da die Ladestation gegebenenfalls ebenfalls begrenzte Ressourcen zur Verfügung hat, wird im Anschluss der Akkumulator um die Ladekapazität geteilt durch die Ladeeffektivität entladen. Zum Abschluss werden die beiden statistischen Werte usedPower und chargedPower aktualisiert.
 
 \begin{lstlisting}
 /**
@@ -135,22 +193,24 @@ availableNodes = numberWaitingAndPhysicallyPresent();
 */
 void ChargingNode::charge()
 {
-for (unsigned int i = 0; i < objectsCharging.size(); i++) {
-EV_INFO << "UAV in slot " << i << " is currently getting charged. Currently Remaining: " << 		objectsCharging[i]->getNode()->getBattery()->getRemaining()	<< endl;
-
-simtime_t currentTime = simTime();
-double chargeAmount = chargeAlgorithm->calculateChargeAmount(objectsCharging[i]->getNode()->getBattery()->getRemaining(),
-objectsCharging[i]->getNode()->getBattery()->getCapacity(), (currentTime - std::max(lastUpdate, objectsCharging[i]->getPointInTimeWhenChargingStarted())).dbl());
-objectsCharging[i]->getNode()->getBattery()->charge(chargeAmount);
-battery.discharge(chargeAmount / this->chargeEffectivenessPercentage);
-usedPower += chargeAmount / this->chargeEffectivenessPercentage;
-chargedPower += chargeAmount;
-}
+	simtime_t currentTime = simTime();
+	for (unsigned int i = 0; i < objectsCharging.size(); i++) {
+		double chargeAmount = chargeAlgorithm->calculateChargeAmount(objectsCharging[i]->getNode()->getBattery()->getRemaining(),
+		objectsCharging[i]->getNode()->getBattery()->getCapacity(),
+		(currentTime - std::max(lastUpdate, objectsCharging[i]->getPointInTimeWhenChargingStarted())).dbl());
+		EV_INFO << "UAV in slot " << i << " is currently getting charged. Currently Remaining: " << objectsCharging[i]->getNode()->getBattery()->getRemaining() << " mAh. Amount: " << chargeAmount << " mAh" << endl;
+		objectsCharging[i]->getNode()->getBattery()->charge(chargeAmount);
+		battery.discharge(chargeAmount / this->chargeEffectivenessPercentage);
+		usedPower += chargeAmount / this->chargeEffectivenessPercentage;
+		chargedPower += chargeAmount;
+	}
 }
 \end{lstlisting}
 
 \subsection{Ladeplätze leeren}
 \label{subsec:Ladeplätze leeren}
+
+Die Ladestation hat nur eine begrenzte Anzahl Ladeplätze. Nach einem abgeschlossenen Ladevorgang wird der Ladeplatz wieder freigeräumt, damit weitere Multicopter aufgeladen werden können.
 
 \begin{lstlisting}
 /*
@@ -158,25 +218,25 @@ chargedPower += chargeAmount;
 */
 void ChargingNode::clearChargingSpots()
 {
-std::deque<ChargingNodeSpotElement*>::iterator objectChargingIt = objectsCharging.begin();
-
-while (objectChargingIt != objectsCharging.end()) {
-if ((*objectChargingIt)->getNode()->getBattery()->getRemainingPercentage() >= (*objectChargingIt)->getTargetCapacityPercentage()) {
-EV_INFO << "MobileNode (Id: " << (*objectChargingIt)->getNode()->getId() << ") is charged to target: "
-<< (*objectChargingIt)->getTargetCapacityPercentage() << endl;
-// Send wait message to node
-MobileNode* mobileNode = (*objectChargingIt)->getNode();
-send(new cMessage("wait"), getOutputGateTo(mobileNode));
-// Send a message to the node which signalizes that the charge process is finished
-send(new cMessage("nextCommand"), getOutputGateTo(mobileNode));
-// Push fully charged nodes to the corresponding list
-objectsFinished.push_back((*objectChargingIt)->getNode());
-objectsCharging.erase(objectsCharging.begin());
-// increment the statistics value
-chargedMobileNodes++;
-}
-objectChargingIt++;
-}
+	std::deque<ChargingNodeSpotElement*>::iterator objectChargingIt = objectsCharging.begin();
+	
+	while (objectChargingIt != objectsCharging.end()) {
+			if ((*objectChargingIt)->getNode()->getBattery()->getRemainingPercentage() >= (*objectChargingIt)->getTargetCapacityPercentage()) {
+			EV_INFO << "MobileNode (Id: " << (*objectChargingIt)->getNode()->getId() << ") is charged to target: "
+			<< (*objectChargingIt)->getTargetCapacityPercentage() << endl;
+			// Send wait message to node
+			MobileNode* mobileNode = (*objectChargingIt)->getNode();
+			send(new cMessage("wait"), getOutputGateTo(mobileNode));
+			// Send a message to the node which signalizes that the charge process is finished
+			send(new cMessage("nextCommand"), getOutputGateTo(mobileNode));
+			// Push fully charged nodes to the corresponding list
+			objectsFinished.push_back((*objectChargingIt)->getNode());
+			objectsCharging.erase(objectsCharging.begin());
+			// increment the statistics value
+			chargedMobileNodes++;
+		}
+		objectChargingIt++;
+	}
 }
 
 \end{lstlisting}
