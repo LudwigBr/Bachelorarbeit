@@ -18,7 +18,7 @@ Im Rahmen des bestehenden Projektes wird ein UAV als Multicopter, der zu zivilen
 Multicopter sind Flugobjekte mit mehreren Rotoren, die für Auftrieb sorgen. Einer der bekannten Vertreter ist der Quadrocopter (mit vier Rotoren), darüber hinaus werden unter anderem auch Tricopter, Hexacopter und Octocopter eingesetzt. Die Anzahl der Rotoren beeinflussen in erster Linie die Stabilität in der Luft. Darüber hinaus können Ausfälle einzelner Rotoren bei größerer Anzahl ausgeglichen werden. 
 Eine höhere Rotorenanzahl birgt nicht nur Vorteile. Das Fluggewicht und die nötige Leistung steigen. Daraus folgt, dass entweder größere Energiespeicher nötig sind, welche das Gewicht weiter erhöhen würden oder die Flugdauer mit steigender Rotorenanzahl abnimmt.  
 
-Seit einigen Jahren finden UAVs auch in privaten Bereichen Einsatzmöglichkeiten. Sie werden als Spiel- und Spaßwerkzeug zum Beispiel in Verbindung mit Augmented Reality (AR) verwendet. Dafür wird unter anderem eine einfache Anwendung benötigt. Die Geräte müssen nach dem Auspacken, Zusammenbauen und Aufladen ohne Fachkenntnisse benutzbar sein. \cite[S. 1477]{Bristeau.2011} Diese Vereinfachung für Endanwender wird durch Bordelektronik, die Steuerung und Stabilisierung ermöglicht. 
+Seit einigen Jahren finden Multicopter auch in privaten Bereichen Einsatzmöglichkeiten. Sie werden als Spiel- und Spaßwerkzeug zum Beispiel in Verbindung mit Augmented Reality (AR) verwendet. Dafür wird unter anderem eine einfache Anwendung benötigt. Die Geräte müssen nach dem Auspacken, Zusammenbauen und Aufladen ohne Fachkenntnisse benutzbar sein. \cite[S. 1477]{Bristeau.2011} Diese Vereinfachung für Endanwender wird durch Bordelektronik, die Steuerung und Stabilisierung ermöglicht. 
 
 Die Rotoren des Multicopters sind üblicherweise an einen Elektromotor angeschlossen. Die benötigte Energie wird von einem Energiespeicher geliefert. Hier kommen nahezu ausschließlich Lithium-Polymer-Akkumulatoren zum Einsatz, weitere Details dazu können im Kapitel \ref{ch:Ladeverhalten} nachgelesen werden. \cite{DanielBachfeld.2013}
 
@@ -39,7 +39,7 @@ Das Framework ermöglicht die Erstellung von Objekten, welche miteinander und der
 \subsection{Projekt}
 \label{sub:Projekt}
 Die Arbeit baut auf ein bestehendes Projekt auf. In diesem Projekt werden Missionen für Multicopter simuliert. Die Missionen setzen sich aus einzelnen Kommandos zusammen, welche in der gleichen Form auch in der realen Welt genutzt werden können. Eine einfache Mission könnte aus einer Abfolge von mehreren Bewegungskommandos, die unendlich wiederholt werden sollen, bestehen. Im Laufe der Mission entleert sich der Akkumulator des eingesetzten Multicopters. Vor jedem Kommando führt der Multicopter eine Ressourcenkalkulation durch und prüft, ob die Energie noch für das nächste Kommando und einen anschließenden Flug zur nächstgelegenen Ladestation reicht. Falls dieser Test ein negatives Resultat liefert, wird das Flugobjekt ausgetauscht und das vorher im Einsatz befindliche fliegt zur nächsten Ladestation.
-Ein komplexeres Szenario könnte mehrere simultan genutzte UAVs enthalten und zusätzlich eine Begrenzung der vorhandenen Ersatz-UAVs. 
+Ein komplexeres Szenario könnte mehrere simultan genutzte Multicopter enthalten und zusätzlich eine Begrenzung der vorhandenen Ersatzgeräte. 
 
 
 \subsection{Implementierung}
