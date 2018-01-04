@@ -3,10 +3,11 @@
 \label{cha:Anforderungsanalyse}
 
 Alle Anforderungen werden natürlich sprachlich ausgedrückt und erhalten eine hervorgehobene Bezeichnung. Diese Bezeichnung wird in der tabellarischen Darstellung am Ende des Kapitels aufgegriffen, welche eine Zusammenfassung der Anforderungen darstellt.
-Jede Anforderung wird gemäß der MoSCoW-Priorisierung \todo{Quelle} gewichtet.
+Jede Anforderung wird gemäß der MoSCoW-Priorisierung gewichtet \cite{InternationalInstituteofBusinessAnalysis.2012}.
 
 \begin{table}[h]
 	\caption{MoSCoW Akkronym}
+	\renewcommand{\arraystretch}{1.5}
 	\begin{tabular}{llp{10cm}}
 		M & MUST & Diese Anforderung muss erfüllt werden. \\
 		S & SHOULD & Diese Anforderung sollte erfüllt werden. \\
@@ -18,7 +19,7 @@ Jede Anforderung wird gemäß der MoSCoW-Priorisierung \todo{Quelle} gewichtet.
 
 
 
-\section{funktionale Eigenschafen}
+\section{Funktionale Eigenschafen}
 \label{sec:funktionale Eigenschafen}
 
 \textbf{Ladeplätze: } Jede Ladestation hat eine begrenzte Anzahl von Ladeplätzen, diese bestimmen wie viele Ladevorgänge gleichzeitig parallel ablaufen können. \textit{Priorität MUST}
@@ -50,14 +51,14 @@ Die Vorhersage soll die, zum Zeitpunkt der Anfrage bestehenden, Reservierungen m
 \textbf{Mobile Ladestation: } Jede Ladestation soll über die Fähigkeit zur eigenen Fortbewegung verfügen. \textit{Priorität WON'T}
 
 
-\section{nicht funktionale Eigenschafen}
+\section{Nicht funktionale Eigenschafen}
 \label{sec:nicht funktionale Eigenschafen}
 
 \textbf{Codesprache: } Im Quelltext darf ausschließlich die englische Sprache verwendet werden. \textit{Priorität MUST}
 
-\textbf{Ladeplatzorganisation Zeitverzögerung: } Die Organisation der Ladeplätze soll ohne Zeitverzögerung erfolgen. Die benötigte Zeit, um einen Multicopter an den Lademechanismus an- und abzuschließen soll vernachlässigt werden. \textit{Priorität MUST}
-
 \textbf{Coderichtlinien: } Die bestehenden Coderichtlinien, welche in der automatischen Formatierung der Entwicklungsumgebung hinterlegt sind, sollen eingehalten werden. \textit{Priorität MUST}
+
+\textbf{Ladeplatzorganisation Zeitverzögerung: } Die Organisation der Ladeplätze soll ohne Zeitverzögerung erfolgen. Die benötigte Zeit, um einen Multicopter an den Lademechanismus an- und abzuschließen soll vernachlässigt werden. \textit{Priorität MUST}
 
 \textbf{Graphische Darstellung: } Die Ladestationen sollen in das bestehende Projekt eingepflegt werden und in der graphischen Simulationsansicht angemessen dargestellt werden. \textit{Priorität SHOULD}
 
@@ -85,8 +86,8 @@ Die Vorhersage soll die, zum Zeitpunkt der Anfrage bestehenden, Reservierungen m
 		Kooperation zwischen Ladestationen & Ja & COULD \\ \hline
 		Mobile Ladestation & Ja & WON'T \\ \hline \hline
 		Codesprache & Nein & MUST \\ \hline
-		Ladeplatzorganisation Zeitverzögerung & Nein & MUST \\ \hline
 		Coderichtlinien & Nein & MUST \\ \hline
+		Ladeplatzorganisation Zeitverzögerung & Nein & MUST \\ \hline
 		Graphische Darstellung & Nein & SHOULD \\ \hline
 	\end{tabular}
 	\label{tab:Zusammenfassung Anforderungen}
