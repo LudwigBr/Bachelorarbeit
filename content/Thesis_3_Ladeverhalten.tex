@@ -57,7 +57,7 @@ Phase zwei endet üblicherweise sobald eine festgelegte minimale Stromstärke erre
 \end{figure}
 
 
-\section{Beispielmessungen}
+\section{Messungen}
 \label{sec:Beispielmessungen}
 Die Ausführungen aus der Literatur geben einen Überblick über die Funktionsweise der Akkumulatoren und ihre Aufladung. Mit Hilfe der Beispielmessungen sollen Werte gefunden werden, die den Ladeverlauf realistisch abbilden. Für eine statistisch fundiertes Ladeverhalten müssten die Messungen erweitert werden. Die neun Testdatensätze weisen eine Reihe von Unsicherheiten auf. Es wurde nur ein Ladegerät und ein Akkumulator verwendet. Effekte die von einer verschiedenen Gesamtkapazität abhängen können deshalb nur vermutet und nicht nachgewiesen werden. Die geringe Anzahl der Versuche kann die Schwankungen der Testergebnisse nicht ausgleichen.
 
@@ -111,7 +111,21 @@ Darüber hinaus muss der Endzeitpunkt $t_{E1}$ der ersten Phase bestimmt werden. 
 	\end{split}
 \end{equation}
 
-Die zweite Phase wird unabhängig von der ersten Phase betrachtet, deshalb startet diese ebenfalls bei $t = 0$. Ihr Verlauf kann wie in \ref{abb:Beispieldiagramm Messungen} gezeigt durch eine nach oben begrenzte Wachstumsfunktion modelliert werden. Damit das Maximum erreicht werden kann, wird $C_{max}$ mit dem selbst gewählten Wert $a$ multipliziert. Der Wert für $a$ wurde dabei über Testeinsetzungen ermittelt und so gewählt, dass die Ergebnisse für die Aufladung mit 2 A und 4 A möglichst genau sind.
+Die zweite Phase wird unabhängig von der ersten Phase betrachtet, deshalb startet diese ebenfalls bei $t = 0$. Ihr Verlauf kann wie in \ref{abb:Beispieldiagramm Messungen} gezeigt durch eine nach oben begrenzte Wachstumsfunktion modelliert werden. Damit das Maximum erreicht werden kann, wird $C_{max}$ mit dem selbst gewählten Wert $a$ multipliziert. Der Wert für $a$ wurde dabei über Testeinsetzungen ermittelt und so gewählt, dass die Ergebnisse für die Aufladung mit 2 A und 4 A möglichst genau sind. Die Abweichungen für 1 A wurden nicht komplett missachtet, weshalb der gewählte Wert ein Kompromiss zwischen den Optimalwerten darstellt. 
+Die optimalen Werte anhand des Mittelwertes der Abweichungen sind abhängig von der Ladestromstärke.
+
+\begin{table}[H]
+	\caption{Werteauswahl für $a$}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabular}{|cs|c|}
+		\hline
+		Ladestrom (A) & $a$  \\ \hline \hline		
+		1 & 0,003531  \\ \hline
+		2 & 0,001246  \\ \hline
+		4 & 0,001188  \\ \hline
+	\end{tabular}
+	\label{tab:Werteauswahl für a}
+\end{table}
 
 \begin{equation}
 	\begin{split}

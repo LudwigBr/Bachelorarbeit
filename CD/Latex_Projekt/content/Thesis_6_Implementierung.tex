@@ -3,7 +3,7 @@
 Im folgenden Kapitel werden einzelne Teile der Implementierung gezeigt und erläutert. Dabei wird ein möglicher Ablauf eines Multicopters mit einer Ladestation aufgezeigt. Eine detaillierte Auseinandersetzung mit den Implementierungen aller Fähigkeiten der Ladestation würde quantitativ den Rahmen sprengen. Die konkreten Implementierungen der anderen Fähigkeiten der Ladestation können dem Quellcode entnommen werden. 
 Es wird mit der Verarbeitung ankommender Multicopter begonnen, dabei wird diesem ein Warteplatz zugewiesen. In der darauffolgenden regelmäßigen Aktualisierung, werden die Ladeplätze verteilt. Darüber hinaus wird die gesamte Organisation der Ladeplätze vorgestellt. Die initiale Füllung, die Leerung nach erfolgreicher Aufladung und der Austausch insofern bestimmte Kriterien erfüllt werden.
 
-Das Kapitel endet mit einer Übersicht über die erledigten Anforderungen. Dabei werden nicht nur die hier vorgestellten Implementierungen beachtet, sondern die gesamte erledigte Arbeit einbezogen.
+Das Kapitel endet mit einer Übersicht über alle implementierten Anforderungen. Dabei werden nicht nur die hier präsentierten Implementierungen beachtet, sondern die gesamte Arbeit einbezogen.
 
 \section{Ankommende Multicopter}
 \label{sec:Ankommende Multicopter}
@@ -11,7 +11,8 @@ Es werden zwei Möglichkeiten angeboten, wie Multicopter einen Ladeplatz erhalten
 Falls die Ladestation bis zu diesem Zeitpunkt nicht aktiv war, wird die regelmäßige Aktualisierungsroutine mit Hilfe einer ersten Nachricht mit dem Namen update aktiviert. Diese Nachricht wird zur aktuellen Simulationszeit verschickt und kommt durch mangelnde Nachrichtenverzögerung zum selben Zeitpunkt an und löst den ersten Ladevorgang und die erste Platzverteilung aus. 
 
 Die zweite Möglichkeit um einen Ladeplatz zugewiesen zu bekommen ist eine Reservierung zu tätigen. Dafür muss eine Nachricht mit dem Namen \lstinline|reserveSpot| an die Ladestation gesendet werden. Diese muss vom Typ \lstinline|ReserveSpotMsg| sein und Informationen über den gewünschten Zielzustand, die erwartete Ankunft und den erwarteten Energieverbrauch bis zur Ankunft enthalten. Der aktuelle Stand des Akkumulators kann direkt vom Objekt abgefragt werden und muss deshalb nicht verschickt werden. Vorteil einer Reservierung ist, dass die Warteliste nach dem Zeitpunkt der Reservierung sortiert wird. Darüber hinaus wird der Ladestation eine bessere Vorhersage für andere Interessenten ermöglicht. Der Ablauf nach dem Empfang der Nachricht ist analog zur ersten Möglichkeit, mit dem Unterschied das die enthaltenen Informationen an die \lstinline|appendToObjectsWaiting()| Methode übergeben werden. 
-\begin{lstlisting}
+
+\begin{lstlisting}[caption={handleMessage() in ChargingNode.cc}]
 void ChargingNode::handleMessage(cMessage* msg)
 {
 	if (msg->isName("startCharge")) {
@@ -45,8 +46,8 @@ void ChargingNode::handleMessage(cMessage* msg)
 Die zu Beginn des Kapitels mehrfach referenzierte Methode \lstinline|appendToObjectsWaiting()| hat den Zweck ein Objekt der Warteliste hinzuzufügen. Dabei muss ein Zeiger auf ein Objekt vom Typ \lstinline|MobileNode| und ein gewünschter Zielladezustand in Prozent übergeben werden. Darüber hinaus werden im Fall einer Reservierung die Zeit der Reservierung, die erwartete Ankunft und der erwartete Verbrauch bis zur Ankunft als Parameter übergeben.
 Zu Beginn der Methode wird geprüft, ob noch Warteplätze frei sind und ob das Objekt bereits in der Warteschlange ist. Sollte eine der beiden Bedingungen zutreffen wird eine entsprechende Fehlermeldung generiert und die Methode vorzeitig beendet. Anschließend wird ein Containerobjekt der Klasse \lstinline|ChargingNodeSpotElement| erstellt. Dafür wird ein die Aufladezeit, die zu erwartende Wartezeit, der Zielzustand und Zeiger auf das \lstinline|MobileNode| Objekt benötigt. Die Aufladezeit wird vom implementierten Ladealgorithmus berechnet, dafür wird der aktuelle Zustand und der zu erwartende Verbrauch berücksichtigt. Die Wartezeit wird in einer Hilfsmethode \lstinline|getEstimatedWaitingSeconds()| berechnet. Das Ergebnis ist, falls eine schnelle Aufladung priorisiert wird, nicht bindend. Nach der Erstellung werden die Ankunftszeit und der Zeitpunkt der Reservierung mit je einer Setter-Methode gesetzt. Falls es sich um keine Reservierung handelt wird der Standardwert, welcher dem aktuellen Simulationszeitpunkt entspricht verwendet.
 Abschließend wird das erstellte Containerobjekt der Warteliste \lstinline|objectsWaiting| hinzugefügt und eine Bestätigungsmitteilung ausgegeben.
-
-\begin{lstlisting}
+\\\\\\\\\\
+\begin{lstlisting}[caption={appendToObjectsWaiting() in ChargingNode.cc}]
 /**
 * Appends a MobileNode to the waiting queue.
 * Estimated wait and charge duration get calculated and appended.
@@ -89,8 +90,8 @@ Zu Beginn dieser Sektion wird die \lstinline|updateState()| Methode vorgestellt,
 
 Die Aktualisierung beginnt nach dem Empfang einer Nachricht mit dem Namen \lstinline|update|. Die \lstinline|updateState()| Methode, welche jede von der \lstinline|GenericNode| erbende Klasse implementieren muss wird aufgerufen. Zu Beginn wird der Ladezustand der Station überprüft, falls keine weitere Energie zur Verfügung steht wird der restliche Ablauf direkt abgebrochen.
 Wenn die Ladeplätze besetzt sind werden diese in der \lstinline|charge()| Methode aufgeladen. Anschließend werden die bis zum Zielzustand geladenen Multicopter von den Ladeplätzen entfernt. Im Anschluss und unabhängig davon, ob in diesem Aktualisierungsvorgang bereits Objekte geladen wurden, werden die Ladeplätze gefüllt. Nachdem alle Ladeplätze belegt sind oder keine weiteren wartenden Multicopter zur Verfügung stehen, wird die Methode \lstinline|rearrangeChargingSpots()| aufgerufen. In dieser Methode werden die Ladeplätze umverteilt. Wenn ein Objekt der Ladeliste später reserviert hat, als ein Objekt der Warteliste, werden diese getauscht. Falls die Priorisierung der schnellen Aufladung aktiviert ist, kann hier eine nachträgliche Änderung der Ladeplätze erfolgen.
-
-\begin{lstlisting}
+\\\\\\\\
+\begin{lstlisting}[caption={updateState() in ChargingNode.cc}]
 void ChargingNode::updateState()
 {
 	if (battery.isEmpty()) {
@@ -112,7 +113,7 @@ Damit die Multicopter aufgeladen werden können, müssen sie aus der Warteliste in
 Als erstes wird geprüft, ob sich Multicopter in der Warteliste befinden, die bereits an der Ladestation angekommen sind. Reservierungen erscheinen auch in der Warteliste, bevor der entsprechende Multicopter an der Ladestation eingetroffen ist. Objekte können jedoch nur geladen werden wenn die Koordinaten des Objektes und der Ladestation übereinstimmen. Danach wird das nächste wartende Objekt ausgewählt. Die Priorisierung erfolgt in der Methode \lstinline|getNextWaitingObjectIterator()|, welche im zweiten Teil dieser Sektion erläutert wird. Diese Methode gibt einen Iterator zurück, welcher auf das entsprechende Containerobjekt zeigt. Anschließend wird eine Schleife durchlaufen, solange es freie Ladeplätze gibt und für die Aufladung bereite Objekte zur Verfügung stehen.
 Innerhalb der Schleife wird der Startzeitpunkt des Ladevorgangs mit Hilfe einer Setter-Methode zu dem Containerobjekt hinzugefügt. Anschließend wird der Multicopter an die Ladeliste \lstinline|objectsCharging| angehangen und von der Warteliste entfernt. Am Ende der Schleife wird die Anzahl der zur Verfügung stehenden wartenden Objekte und der Zeiger auf den nächsten Container aktualisiert.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={fillChargingSpots() in ChargingNode.cc}]
 /**
 * Populates the charging nodes.
 */
@@ -138,14 +139,14 @@ void ChargingNode::fillChargingSpots()
 }
 \end{lstlisting}
 
-Die Auswahl des nächsten wartenden Objekts erfolgt innerhalb der Methode \lstinline|getNextWaitingObjectIterator()|. Diese erwartet als Parameter einen booleschen Wert, der angibt, ob eine schnelle Teilaufladung priorisiert werden soll. Der Rückgabewert ist ein Iterator, welcher ein Containerelement aus der Warteliste referenziert. Der Iterator kann in Schleifen Verwendung finden, ebenso kann durch Dereferenzierung das entsprechende Containerobjekt angesprochen werden. 
+Die Auswahlalgorithmus des nächsten wartenden Objekts ist innerhalb der Methode \lstinline|getNextWaitingObjectIterator()| implementiert. Diese erwartet als Parameter einen booleschen Wert, der angibt, ob eine schnelle Teilaufladung priorisiert werden soll. Der Rückgabewert ist ein Iterator, welcher ein Containerelement aus der Warteliste referenziert. Der Iterator kann in Schleifen Verwendung finden, ebenso kann durch Dereferenzierung das entsprechende Containerobjekt angesprochen werden. 
 Zu Beginn wird der Ergebnisiterator für das nächste wartende Objekt mit einem leeren Wert gefüllt. Da Iteratoren keinen \lstinline|NULL| Wert kennen wird dafür \lstinline|objectsWaiting.end()| verwendet. Dieser Ausdruck kann verstanden werden, als das Element, welches auf das letzte Element in der Warteliste folgt. Anschließend wird der Laufiterator mit dem ersten Wert der Warteliste initialisiert. Die darauffolgende Schleife durchläuft die gesamte Warteliste.
 Falls das Objekt sich nicht an der Ladestation befindet wird der Laufiterator inkrementiert und der Schleifendurchlauf abgebrochen. Das gleiche Ereignis tritt ein, falls eine Schnelle Aufladung priorisiert wird und das vom Laufiterator referenzierte Objekt über eine höhere Ladung verfügt, als vom Ladealgorithmus vorgeschrieben wird. Falls in einem Schleifendurchlauf der nächste Schritt erreicht wird und der Ergebnisiterator noch mit seinem Initialwert belegt ist, wird dieser mit dem aktuellen Laufiterator überschrieben. Falls der Ergebnisiterator bereits belegt wurde, aber das referenzierte Objekt eine spätere Zeit der Reservierung aufweist, als das vom Laufiterator referenzierte Objekt, wird er ebenfalls überschrieben. Abschließend muss innerhalb der Schleife der Laufiterator inkrementiert werden, damit keine Endlosschleife entsteht.
 
-Wenn die Schleife komplett durchlaufen wurde, eine schnelle Aufladung priorisiert wird und der Ergebnisiterator immernoch mit dem Initialwert belegt ist, erfolgt ein rekursiver Aufruf, in welchem der boolesche Parameter mit \lstinline|false| übergeben wird. Dadurch werden Multicopter ausgewählt, welche die Grenzkapazität für eine schnelle Aufladung überschreiten. Dies tritt allerdings nur ein, wenn unter Berücksichtigung der Grenzkapazität kein wartendes Objekt gefunden wurde.
+Wenn die Schleife komplett durchlaufen wurde, eine schnelle Aufladung priorisiert wird und der Ergebnisiterator weiterhin mit dem Initialwert belegt ist, erfolgt ein rekursiver Aufruf, in welchem der boolesche Parameter mit \lstinline|false| übergeben wird. Dadurch werden Multicopter ausgewählt, welche die Grenzkapazität für eine schnelle Aufladung überschreiten. Dies tritt allerdings nur ein, wenn unter Berücksichtigung der Grenzkapazität kein wartendes Objekt gefunden wurde.
 Abschließend wird der Ergebnisiterator zurückgegeben. Solange sich ein Objekt in der Warteliste befindet, hat der Ergebnisiterator einen Inhalt, ansonsten wird der initiale \lstinline|NULL| Wert zurückgegeben.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={getNextWaitingObjectIterator() in ChargingNode.cc}]
 /**
 * Elements in the waiting queue get prioritized by their reservationTime.
 * When fastCharge is enbabled the top priority is that the object has less energy then the chargeAlgorithm is advertising as fastCharge.
@@ -186,7 +187,7 @@ In jedem Schleifendurchlauf wird die aufzuladende Kapazität berechnet. Dafür wir
 Nachdem die Ladekapazität berechnet wurde, wird eine Statusmitteilung auf der Konsole ausgegeben und anschließend der Akkumulator des Multicopters um den Wert aufgeladen.
 Da die Ladestation gegebenenfalls ebenfalls begrenzte Ressourcen zur Verfügung hat, wird im Anschluss der Akkumulator um die Ladekapazität geteilt durch die Ladeeffektivität entladen. Zum Abschluss werden die beiden statistischen Werte \lstinline|usedPower| und \lstinline|chargedPower| aktualisiert.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={charge() in ChargingNode.cc}]
 /**
 * Charges the nodes placed on the charging spots depending on the last update.
 */
@@ -212,7 +213,7 @@ Die Ladestation hat nur eine begrenzte Anzahl Ladeplätze. Nach einem abgeschloss
 In einer Iterator basierten Schleife werden alle Ladeplätze nacheinander abgearbeitet. In jedem Durchlauf wird geprüft, ob das Element auf dem aktuellen Ladeplatz seinen Zielladezustand erreicht hat oder vollständig aufgeladen ist. Falls diese Bedingung zutrifft wird eine Mitteilung auf der Konsole ausgegeben. Anschließend wird eine \lstinline|wait| Nachricht an die entsprechende \lstinline|MobileNode| versendet, gefolgt von einer \lstinline|nextCommand| Nachricht. Diese Nachrichten bewirken, dass ein Wartekommando an die Kommandoliste der \lstinline|MobileNode| angehangen wird und anschließend das aktuelle Ladekommando beendet wird. Im Wartemodus verbleibt eine \lstinline|MobileNode| untätig, bis ihr eine neue Aufgabe zugewiesen wird.
 Nachdem der Multicopter informiert wurde, wird dieser der Liste mit den fertig geladenen Multicoptern hinzugefügt und von seinem aktuellen Ladeplatz entfernt. Im Anschluss wird der statistische Wert \lstinline|chargedUAVs|, der die geladenen Objekte mitzählt, inkrementiert. Abschließend wird der Laufiterator inkrementiert, um den nächsten Schleifendurchlauf einzuleiten und damit den nächsten Ladeplatz zu überprüfen.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={clearChargingSpots() in ChargingNode.cc}]
 /*
 * Remove nodes from charging spot when done
 */
@@ -253,7 +254,7 @@ Für den Austausch wird das wartende Objekt zwischengespeichert. Anschließend wir
 
 
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={rearrangeChargingSpots() in ChargingNode.cc}]
 /*
 * Exchange waiting spots when needed due to earlier reservation or the fast charge mechanismn
 */
@@ -298,12 +299,12 @@ void ChargingNode::rearrangeChargingSpots()
 \section{Auswertung Anforderungen}
 \label{sec:Auswertung Anforderungen}
 Im folgenden Kapitel wird die Implementierung im Hinblick auf die in \ref{cha:Anforderungsanalyse} festgestellten Anforderungen ausgewertet.
-In der Tabelle \ref{tab:Auswertung Anforderungen} ist zu sehen, dass alle nicht funktionalen Anforderungen erledigt wurden. Darüber sind im Bereich der funktionalen Anforderungen die beiden wichtigsten Kategorien \lstinline|MUST| und \lstinline|SHOULD| vollständig abgearbeitet und erfüllt. Lediglich die zwei Anforderungen aus der Kategorie \lstinline|COULD| und die eine Anforderung aus der Kategorie \lstinline|WON`T| bleiben unerledigt. Gemäß der MoSCoW-Methode war die Implementierung erfolgreich. 
+In der Tabelle \ref{tab:Auswertung Anforderungen} ist zu sehen, dass alle nicht funktionalen Anforderungen erledigt wurden. Darüber hinaus sind im Bereich der funktionalen Anforderungen die beiden wichtigsten Kategorien \lstinline|MUST| und \lstinline|SHOULD| vollständig abgearbeitet und erfüllt. Lediglich die zwei Anforderungen aus der Kategorie \lstinline|COULD| und die eine Anforderung aus der Kategorie \lstinline|WON`T| bleiben unerledigt. Gemäß der MoSCoW-Methode war die Implementierung erfolgreich. 
 Die noch offen gebliebenen Anforderungen können eine Anregung für weiterführende Arbeiten darstellen. 
 
 \begin{table}[h]
 	\caption{Auswertung Anforderungen}
-	\renewcommand{\arraystretch}{2}
+	\renewcommand{\arraystretch}{1.5}
 	\begin{tabular}{|p{6cm}|c|c|c|}
 		\hline
 		\textbf{Bezeichnung} & \textbf{Funktional} & \textbf{Priorität} & \textbf{Implementiert} \\ \hline \hline
