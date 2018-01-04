@@ -10,7 +10,7 @@ Abschließend wird ein Fazit gezogen, welches die Grundlage für den zu implementi
 Im einleitenden Kapitel über Multicopter \ref{sub:Multicopter}, wurde festgestellt, dass diese üblicherweise von Elektromotoren angetrieben werden. Elektromotoren benötigen eine elektrische Energiezufuhr, welche von Akkumulatoren bereit gestellt wird.
 
 Akkumulatorentypen lassen sich in Gruppen basierend auf ihren chemischen Bestandteilen einteilen. Drei häufig verwendete Typen basieren auf Lithium-Ionen, Nickel und Bleisäure. Durch die gleiche Basis haben Akkumulatoren innerhalb einer Gruppe ähnliche Merkmale.
-Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Wettbewerb oder Gesetze bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auf der Bekanntheit. Dessen ungeachtet wird  die Ladestation für aktuelle Multicopter konzeptioniert. \todo{weiterschreiben}
+Für die Auswahl eines Energielieferanten sind neben den funktionalen Eigenschaften Energiedichte (Wh/kg), Kapazität (Ah), Spannung pro Zelle (V) auch weitere nicht funktionale Eigenschaften wie Langlebigkeit, Sicherheit und Ladegeschwindigkeit relevant. In der Anwendung sind die wirtschaftlichen Aspekte ebenfalls ein relevanter Faktor. Für die rein wissenschaftliche Betrachtung ergeben sich hier viele Probleme. Unterschiedliche Marktpreise basieren nicht zwingend auf der Wertigkeit der verwendeten Güter, sondern können auch durch Skaleneffekte der Massenproduktion, Wettbewerb oder Gesetze bezüglich der Technologie entstehen. Diese Effekte wiederum basieren unter anderem auf der Nachfrage nach dem Produkt und damit auf der Bekanntheit. Dessen ungeachtet wird  die Ladestation für aktuelle Multicopter konzeptioniert.
 
 \subsection{Bleisäure Akkumulatoren}
 \label{subsec:Bleisäure Akkumulatoren}
@@ -43,14 +43,12 @@ Das Ladeverfahren mit dem ein Akkumulator aufgeladen wird beeinflusst diesen maß
 
 Lithium-Ionen Akkumulatoren reagieren sensibel auf Überladung oder zu hohe Spannung. Die chemischen Bestandteile werden beschädigt und die Leistung des Energiespeichers fällt ab. Ein einfacher Ladevorgang mit einer konstanten Stromstärke kommt deshalb nicht in Frage. Je näher der Füllstand der Kapazität des Akkumulators kommt, desto größer wird die Spannung. Lithium-Polymer Akkumulatoren haben üblicherweise eine Maximalspannung von 4,2 V, eine Überschreitung verursacht Schäden und reduziert die Lebensdauer dramatisch. \cite[381]{Khan.2016}
 
-Das eingesetzte Ladeverfahren wird als Constant Current Constan Voltage (CCCV) bezeichnet. Es strebt eine möglichst hohe Ladegeschwindigkeit bei weiterhin hoher Lebensdauer des Akkumulators an. Dieses Verfahren besteht aus zwei Phasen. 
+Das eingesetzte Ladeverfahren wird als Constant Current Constant Voltage (CCCV) bezeichnet. Es strebt eine möglichst hohe Ladegeschwindigkeit bei weiterhin hoher Lebensdauer des Akkumulators an. Dieses Verfahren besteht aus zwei Phasen. 
 Der beispielhafte Verlauf von Stromstärke und Spannung über die Zeit, kann in der Abbildung \ref{abb:Beispielverlauf CCCV Stromstärke und Spannung} betrachtet werden. Die konkreten Werte sind erfunden, das Diagramm soll lediglich den üblichen Verlauf visualisieren. Konkrete Messungen der Kapazität über die Zeit können im folgenden Kapitel \ref{sec:Beispielmessungen} gefunden werden.
 In der ersten Phase (CC) wird der leere Akkumulator mit einer konstanten Stromstärke geladen. Im Verlauf des Ladevorgangs steigt die Spannung an. Die Füllmenge des Akkumulators steigt linear über die Zeit an. Der Übergang zur zweiten Phase (CV) findet statt, sobald die Maximalspannung erreicht ist. Zu diesem Zeitpunkt ist der Akkumulator mit ~75-80\% seiner Maximalkapazität geladen. \cite[1]{Hsieh.1999} \cite[1]{Yan.2010} 
 
 In der zweiten Phase bleibt die Spannung konstant beim Maximalwert und die Stromstärke nimmt ab. Daraus folgt, dass die Ladegeschwindigkeit nun nicht mehr linear verläuft, sondern immer weiter abfällt, je stärker der Akkumulator geladen ist. 
 Phase zwei endet üblicherweise sobald eine festgelegte minimale Stromstärke erreicht wurde. Der Akkumulator ist dann abhängig vom festgelegten Minimalwert gefüllt. \cite[381]{Khan.2016}
-
-\todo{Minimale Stromstärke}
 
 \begin{figure}[H]
 	\caption{Beispielverlauf CCCV Stromstärke und Spannung}
@@ -64,7 +62,7 @@ Phase zwei endet üblicherweise sobald eine festgelegte minimale Stromstärke erre
 Die Ausführungen aus der Literatur geben einen Überblick über die Funktionsweise der Akkumulatoren und ihre Aufladung. Mit Hilfe der Beispielmessungen sollen Werte gefunden werden, die den Ladeverlauf realistisch abbilden. Für eine statistisch fundiertes Ladeverhalten müssten die Messungen erweitert werden. Die neun Testdatensätze weisen eine Reihe von Unsicherheiten auf. Es wurde nur ein Ladegerät und ein Akkumulator verwendet. Effekte die von einer verschiedenen Gesamtkapazität abhängen können deshalb nur vermutet und nicht nachgewiesen werden. Die geringe Anzahl der Versuche kann die Schwankungen der Testergebnisse nicht ausgleichen.
 
 Für die Messungen wurde ein Turnigy Accucell 6 Ladegerät verwendet, welches das CCCV Verfahren benutzt, um unter anderem Lithium-Polymer-Akkumulatoren aufzuladen. Als Testakkumulator wird ein bereits für Multicopterflüge gebrauchter Akkumulator Zippy Compact mit einer Maximalkapazität von 1800 mAh verwendet. Der Akkumulator wurde vor jedem Ladevorgang mit dem Ladegerät im Modus \lstinline|Discharge| mit 1A entladen. 
-Für den Ladevorgang wurde der Akkumulator mit einer Stromstärke von 1 A, 2 A und 4 A geladen. Dieser Ablauf wurde dreimal wiederholt um die Wahrscheinlichkeit für zufällige Erscheinungen zu reduzieren. Das Ladegerät bietet eine Computerschnittstelle und kann den Ladeverlauf aufzeichnen. Aus den Diagrammen wurden der Endpunkt der ersten Phase und der Endpunkt des Ladevorgangs abgelesen, beispielhaft aufgezeigt in \ref{abb:Beispieldiagramm Messungen}. Aufgrund der begrenzten Qualität der aufgezeichneten Diagramme sind die Kapazitätswerte auf Vielfache von 5 gerundet, die Zeit ist abhängig von der Skalierung gerundet. Neben den abgelesenen Werte können der folgenden Tabelle \ref{tab:Ergebnisse Beispielmessungen} die Steigung der ersten Phase, die Dauer der zweiten Phase und das Verhältnis von beiden Phasen bezüglich der Zeit und der Kapazität entnommen werden. Die Darstellung der Berechnungen sind gerundet, für die weitere Verwendung werden jedoch die exakten Ergebnisse verwendet. Die von der Ladegerätsoftware erstellten Diagramme können dem Anhang \ref{A. Appendix} entnommen werden. Die genauen Werte und die Diagramme der Ladevorgänge können dem Anhang entnommen werden. Darüber hinaus befinden sich die Diagramme mit den eingezeichneten Ablesegeraden und die Excel-Datei, in welcher die Berechnungen für die nachfolgenden Formeln angefertigt wurden, auf der beiliegenden CD. Die Struktur der CD kann in \ref{sec:cd} eingesehen werden.
+Für den Ladevorgang wurde der Akkumulator mit einer Stromstärke von 1 A, 2 A und 4 A geladen. Dieser Ablauf wurde dreimal wiederholt um die Wahrscheinlichkeit für zufällige Erscheinungen zu reduzieren. Das Ladegerät bietet eine Computerschnittstelle und kann den Ladeverlauf aufzeichnen. Aus den Diagrammen wurden der Endpunkt der ersten Phase und der Endpunkt des Ladevorgangs abgelesen, beispielhaft aufgezeigt in \ref{abb:Beispieldiagramm Messungen}. Aufgrund der begrenzten Qualität der aufgezeichneten Diagramme sind die Kapazitätswerte auf Vielfache von 5 gerundet, die Zeit ist abhängig von der Skalierung gerundet. Neben den abgelesenen Werte können der folgenden Tabelle \ref{tab:Ergebnisse Beispielmessungen} die Steigung der ersten Phase, die Dauer der zweiten Phase und das Verhältnis von beiden Phasen bezüglich der Zeit und der Kapazität entnommen werden. Die Darstellung der Berechnungen sind gerundet, für die weitere Verwendung werden jedoch die exakten Ergebnisse verwendet. Die von der Ladegerätsoftware erstellten Diagramme können dem Anhang \ref{A. Appendix} entnommen werden. Die genauen Werte und die Diagramme der Ladevorgänge können dem Anhang entnommen werden. Darüber hinaus befinden sich die Diagramme mit den eingezeichneten Ablesegeraden und die Excel-Datei, in welcher die Berechnungen für die nachfolgenden Formeln angefertigt wurden, auf der beiliegenden CD.
 
 \begin{table}[ht]
 	\caption{Ergebnisse Beispielmessungen}
@@ -104,7 +102,7 @@ Die erste Phase lässt sich durch eine lineare Funktion beschreiben. Die errechne
 	C(t) = 0,2754 * I * t
 \end{equation}
 
-Darüber hinaus muss der Endzeitpunkt $t_{E1}$ der ersten Phase bestimmt werden. Dieser hängt von $I$ und der Gesamtkapazität der Akkumulators $C_{max}$ ab. \todo{erklärung}
+Darüber hinaus muss der Endzeitpunkt $t_{E1}$ der ersten Phase bestimmt werden. Dieser hängt von $I$ und der Gesamtkapazität der Akkumulators $C_{max}$ ab. Die Abhängigkeit von der Stromstärke wird in \ref{abb:Beispielverlauf CCCV Stromstärke und Spannung} deutlich. Der Ladestrom fällt nach dem Wechsel in die zweite Phase ab. Ein niedrigerer Ladestrom führt dazu, dass die zweite Phase bei einer höheren relativen Kapazität erreicht wird, dessen ungeachtet verlängert sich der Ladevorgang.
 
 \begin{equation}
 	\begin{split}
@@ -113,7 +111,7 @@ Darüber hinaus muss der Endzeitpunkt $t_{E1}$ der ersten Phase bestimmt werden. 
 	\end{split}
 \end{equation}
 
-Die zweite Phase wird unabhängig von der ersten Phase betrachtet, deshalb startet diese ebenfalls bei $t = 0$. Ihr Verlauf kann wie in \ref{abb:Beispieldiagramm Messungen} gezeigt durch eine nach oben begrenzte Wachstumsfunktion modelliert werden. Damit das Maximum erreicht werden kann, wird $C_{max}$ mit dem selbst gewählten Wert $a$ multipliziert. Der Wert für $a$ wurde dabei über Testeinsetzungen ermittelt und so gewählt, dass die Ergebnisse für die Ladung mit 2 A und 4 A möglichst genau sind.\todo{Quelle Wachstumsfunktion} 
+Die zweite Phase wird unabhängig von der ersten Phase betrachtet, deshalb startet diese ebenfalls bei $t = 0$. Ihr Verlauf kann wie in \ref{abb:Beispieldiagramm Messungen} gezeigt durch eine nach oben begrenzte Wachstumsfunktion modelliert werden. Damit das Maximum erreicht werden kann, wird $C_{max}$ mit dem selbst gewählten Wert $a$ multipliziert. Der Wert für $a$ wurde dabei über Testeinsetzungen ermittelt und so gewählt, dass die Ergebnisse für die Aufladung mit 2 A und 4 A möglichst genau sind.
 
 \begin{equation}
 	\begin{split}
@@ -128,7 +126,7 @@ $B_{0}$ ist die Startkapazität, welche dem Ende von Phase 1 entspricht.
 B_{0} = C(t_{E1}) = (-0,0291 * I + 1) * C_{max}
 \end{equation}
 
-$k$ ist die Wachstumskonstante, welche von der linearen Steigung, dem Startzeitpunkt von der zweiten Phase und $a$ abhängt. \todo{?}
+$k$ ist die Wachstumskonstante, welche von der linearen Steigung, dem Startzeitpunkt der zweiten Phase und $a$ abhängt. 
 
 \begin{equation}
 k = \frac{0,2754 * I}{C_{max} * (a + 0,0291 * I}
