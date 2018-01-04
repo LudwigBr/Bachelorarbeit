@@ -1,0 +1,13 @@
+\chapter{Fazit und Ausblick} 
+\label{ch:Fazit und Ausblick}
+
+Die Bachelorarbeit hatte das Ziel eine intelligente Ladestation in eine Multicopter Simulation zu integrieren.
+Dafür wurden in Kapitel \ref{cha:Anforderungsanalyse} Anforderungen aufgenommen und kategorisiert. Wie in der Auswertung der Anforderungen \ref{sec:Auswertung Anforderungen} festgestellt wurde, konnten die wichtigsten Anforderungen erfüllt werden.
+Die Ladestation verfügt über eine definierbare, variable Anzahl an Warte- und Ladeplätzen. Sie kann mit den anderen Netzwerkteilnehmern, in erster Linie Multicopter, kommunizieren und Informationen über den Ladeverlauf vorhersagen. Darüber hinaus können Reservierungen der Ladeplätze vorgenommen werden, die einen vorhersehbaren Simulationsverlauf ermöglichen. Der Ladeverlauf wird realitätsnah abgebildet, dennoch sind wie in Kapitel \ref{sec:Fazit} festgestellt die Beispielmessungen nicht repräsentativ. Durch die Ähnlichkeit mit den in der Literatur festgestellten Angaben, können die Werte ungeachtet der Mängel verwendet werden.
+Die Ladestation ist dazu fähig den nicht durchgehend linearen Ladeverlauf zu berücksichtigen und kann, wenn gewünscht, den effizienteren Ladeanteil priorisieren. 
+Alle mit der Ladestation in Kontakt stehenden Multicopter werden von dieser verwaltet und können auf Anfrage für neue Aufgaben zur Verfügung gestellt werden. Dabei wird ein möglichst wenig geladener und dennoch ausreichender Multicopter von der Ladestation ausgewählt, um möglichst wenig Ressourcen zu binden.
+
+Für zukünftige Arbeiten bieten sich vor allem zwei sehr verschiedene Gebiete an.
+Erstens könnten die Testmessungen stark erweitert werden. Dafür wäre eine breitere Auswahl der Ladegeräte und Akkumulatoren mit unterschiedlichen Maximalkapazitäten sinnvoll. Gestützt durch eine ausführlichere Literaturrecherche spezialisiert auf den Themenbereich Ladeprozess für Lithium-Ionen-Akkumulatoren könnte dadurch der Ladealgorithmus verbessert werden und realitätsnähere Ergebnisse liefern.
+Zweitens beschränkt sich die Kommunikation der Ladestation nahezu ausschließlich auf Multicopter. Damit der globale Ladeprozess aller in der Simulation befindlicher Multicopter verbessert werden könnte, könnten die Ladestationen untereinander kommunizieren. 
+Ansätze dafür bieten die nicht erfüllten funktionalen Anforderungen aus \ref{cha:Anforderungsanalyse}. Durch den Austausch von Multicoptern während und nach dem Ladeprozess könnte dieser beschleunigt werden und außerdem der Bedarf von Ersatzmulticoptern besser bedient werden.

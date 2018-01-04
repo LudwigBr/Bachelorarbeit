@@ -1,0 +1,364 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SSE Thesis Document Template (Thomas Dietrich) %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[
+	12pt,						% font size
+	%english,					% LANGUAGE english document
+	ngerman,					% LANGUAGE deutsches Dokument, fÃ¼r Umlaute, Silbentrennung etc. (Umlauts, Hyphenation)
+	a4paper,					% paper size
+	%oneside,					% single-sided document
+	twoside,					% two-sided document
+	titlepage,					% the title page is used (will start right)
+	parskip=half,				% space between paragraphs (half line)
+	headings=normal,			% decrease size of headers
+	open=right,					% chapter beginnen rechts
+	listof=totoc,				% list directories in the table of contents
+	bibliography=totoc,			% list bibliography in the table of contents
+	captions=tableheading,		% output labeling tables below
+	draft=true, 				% draft=true useful during writing, set to false for final document %BUG will stop hyperref from working (bookmarks)
+	DIV=13,						%number columns for page layout calculation. The larger, the smaller margins will be. Standard for 12pt is 12
+	BCOR=10mm,					%reserved inner margin for binding
+	headinclude,				%include header into text area
+]{scrreprt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Line Spacing and Margins %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[onehalfspacing]{setspace}
+
+%% Scripture and Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[english]{babel}  %LANGUAGE
+\usepackage[ngerman]{babel} %LANGUAGE
+\usepackage[T1]{fontenc}
+\usepackage[ansinew]{inputenc}
+\usepackage{textcomp} % Euro-Sign etc.
+\usepackage{lmodern}
+
+%% Page Style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[perpage]{footmisc}
+
+% Customize headers and footers
+\usepackage[
+	automark,						% Create Chapter Information in Header automatically
+	headsepline,					% Dividing line under header
+	%footsepline,					% Dividing line over footer
+	ilines							% Align dividing line left-aligned
+]{scrpage2}
+
+\pagestyle{scrheadings} % headers and footers
+\renewcommand*{\chapterpagestyle}{scrheadings} % header and footer on the first page of chapter
+\renewcommand{\headfont}{\normalfont} % font of the header
+
+%TODO: fancyhdr
+
+%% Header
+%\ihead{\large{\textsc{\thesistitle}}\\ \small{\thesistitle} \\[2ex] \textit{\headmark}}
+%\ihead{\large{\textsc{\thesistype}}\ - \small{\autor} \\ \textit{\headmark}}
+\ihead{\textit{\headmark}}
+\chead{}
+\ohead{}
+%\ohead{\includegraphics[scale=0.15]{\logo}}
+% broaden header beyond the text
+\setheadwidth{textwithmarginpar}
+
+%% Footer
+%\ifoot{\small{\thesistype\ \autor}}
+\ifoot{}
+\cfoot{}
+\ofoot{\pagemark}
+
+\recalctypearea %force recalculation of page layout, after setting headers, footers and line spread
+
+%% first tests towards the usage of xetex
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8x]{inputenc}
+%\usepackage{libertine}
+%\usepackage[ngerman]{babel}
+%\usepackage{xunicode}
+%\usepackage{fontspec}
+%\usepackage{xltxtra} % For XeLaTeX
+%\setromanfont[Mapping=tex-text]{Linux Libertine O}		% serif font
+%\setsansfont[Mapping=tex-text]{Linux Biolinum O}		% sanserif font
+%\setmonofont[Mapping=tex-text,Scale=0.9]{Courier New}	% font for code
+%\setmonofont[Mapping=tex-text]{DejaVu Sans Mono}
+%\usepackage{polyglossia}
+%\setdefaultlanguage[spelling=new,latesthyphen=true]{english}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Global Document Information %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% please fill in your personal information
+% do not delete anything here
+\newcommand{\thesistitle}{Konzeptionierung und Implementierung einer intelligenten Ladestation in einer diskreten eventbasierten Simulationsumgebung}
+\newcommand{\thesistype}{Bachelorarbeit}
+\newcommand{\autor}{Ludwig Breitsprecher}
+\newcommand{\mail}{ludwig.breitsprecher@tu-ilmenau.de}
+\newcommand{\courseofstudies}{Wirtschaftsinformatik}
+\newcommand{\matriculationnr}{54131}
+\newcommand{\supervisor}{Prof. Dr. Armin Zimmermann}
+\newcommand{\secondtutor}{M.Sc. Thomas Dietrich}
+\newcommand{\faculty}{Fakult�t f�r Informatik und Automatisierung}
+\newcommand{\department}{System- und Software-Engineering}
+\newcommand{\location}{Ilmenau}
+\newcommand{\registrationdate}{05.~Oktober 2017}
+\newcommand{\submissiondate}{05.~Januar 2018}
+\newcommand{\submissiontimestamp}{05.01.2018}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Graphics & Illustrations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}			% in order to load graphics
+\usepackage{wrapfig}			% integration of graphics with wraping text
+\usepackage{subfig}				% integration of multiple objects within a float
+\usepackage{pdfpages}			% binds a graphic or page (.pdf or .jpg) in the document
+\usepackage{float}
+\graphicspath{{images/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Directory Definition %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{tikz}
+%\usetikzlibrary{trees}
+%\usepackage{xcolor}
+\usepackage{dirtree}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Input Text Files %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyvrb}
+
+% redefine \VerbatimInput
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}%
+	{fontsize=\footnotesize,
+	%
+	frame=lines,  % top and bottom rule only
+	framesep=2em, % separation between frame and text
+	rulecolor=\color{gray},
+	%
+	%label=\fbox{\color{black}data.txt},
+	labelposition=topline,
+	%
+	commandchars=\|\(\), % escape character and argument delimiters for commands within the verbatim
+	commentchar=*        % comment character
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Bibliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[numbers,square]{natbib}
+\bibliographystyle{alphadin}
+%\bibliographystyle{alpha}
+%\bibliographystyle{siam}
+%\bibliographystyle{apalike}
+%\bibliographystyle{acm}    % [1], APP, N, alfabetico
+%\bibliographystyle{phjcp}  % [1], N. APP, aparicion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% TODOs %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{pdfcomment}
+\usepackage[%
+	%disable,
+	%english, %LANGUAGE
+	german, %LANGUAGE
+	textsize=tiny,
+	colorinlistoftodos
+]{todonotes}
+\newcommand{\todoref}[1]{\todo[color=blue!40]{Missing Reference #1}}
+\newcommand{\todoedit}[1]{\todo[color=green!40]{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% HyperRef %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% http://www.tug.org/applications/hyperref/manual.html
+\usepackage[
+	pdftitle={\thesistitle},	% Sets the document information Title field
+	pdfauthor={\autor},			% Sets the document information Author field
+	pdfsubject={\thesistype},	% Sets the document information Subject field
+	draft=false,				% Overwrites documentclass draft option 
+	backref=section,			% Adds backlink text to the end of each item in the bibliography, as a list of section numbers
+	pdfpagelabels,
+	pdfpagelayout=TwoColumnRight,
+	pdfdisplaydoctitle=true,	% Display document title instead of file name in title bar
+	hypertexnames=false,		% To properly display the bookmarks
+	%linktocpage 				% Social bookmarking numbers instead of text in the table of contents
+	bookmarks,
+	bookmarksnumbered=true,
+	bookmarksopen=true,
+	%bookmarksopenlevel=1,
+	hyperfootnotes=false,
+	hyperfigures=true,
+	%unicode=true,
+	colorlinks=true,
+	%% These color definitions should be used for printing (all black)
+	%linkcolor=black,		% Simple internal links
+	%anchorcolor=black,		% Anchor text
+	%citecolor=black,		% References to the bibliography entries in text
+	%filecolor=black,		% Shortcuts, open local files
+	%menucolor=black,		% Acrobat menu items
+	%urlcolor=black,		% Color of external URLs linked text
+	%% These color definitions can be used for distribution in PDF or for colored printing
+	linkcolor=darkblue,		% Simple internal links
+	citecolor=darkblue,		% References to the bibliography entries in text
+	menucolor=darkblue,		% Acrobat menu items
+	urlcolor=cyan,			% Color of external URLs linked text
+]{hyperref}
+
+% Link URL, long URLs wrap etc.
+\usepackage{url}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Paragraph Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setlength{\parskip}{3pt}
+%\setlength{\parindent}{0pt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Abbreviations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[intoc]{nomencl}
+\let\abbrev\nomenclature
+\renewcommand{\nomname}{Abkürzungsverzeichnis} %LANGUAGE
+%\renewcommand{\nomname}{Abbreviations} %LANGUAGE
+\setlength{\nomlabelwidth}{.25\hsize}
+\renewcommand{\nomlabel}[1]{#1 \dotfill} % dots between abbreviations and explainations
+\setlength{\nomitemsep}{-\parsep} % Decrease line spacing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{siunitx}
+\sisetup{
+	%locale=UK, %LANGUAGE
+	%locale=US, %LANGUAGE
+	locale=DE,  %LANGUAGE
+	load-configurations=binary,
+	load-configurations=abbreviations,
+	per-mode=symbol,
+}
+\DeclareSIUnit\bit{Bit}
+\DeclareSIUnit\byte{Byte}
+% Usage:
+%	\SI[options]{value}[pre-unit]{unit}
+%	\si[options]{unit}
+%	\num[options]{number}
+%	\ang[options]{angle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% more featurerich and modern tables %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs}
+\setlength{\belowbottomsep}{\belowrulesep} % replaces 0pt-distance between bottomrule and caption
+%\renewcommand*{\arraystretch}{1.2} more space between rows
+% Usage:
+%   \toprule, \midrule, \bottomrule
+%   \cmidrule, \addlinespace
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Miscellaneous %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{ifdraft}					% run depending on draft or final in documentclass % \ifdraft{draft case}{final case}
+\usepackage{amsmath,amssymb,amstext} 	% For mathematical symbols
+\usepackage{upgreek}					% For non-italic Greek letters, eg. \ Uppi
+%\usepackage{array}
+\usepackage{xspace}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{scrhack}					% To prevent a listing Warning
+\usepackage{listings}					% Program Code
+%\usepackage{chngcntr}					% Continuous renumber the footnotes
+
+\usepackage{caption}
+	\captionsetup{justification=raggedright,format=hang,margin=30pt,font=small,labelfont=bf,labelsep=endash}
+
+\usepackage{paralist}
+\usepackage[yyyymmdd,hhmmss]{datetime}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage[justification=RaggedRight, singlelinecheck=false]{caption} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makenomenclature
+
+
+%% Miscellaneous %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frenchspacing % generated a little more space behind a point
+
+% Avoid widows and orphans (https://en.wikipedia.org/wiki/Widows_and_orphans http://de.wikipedia.org/wiki/Hurenkind)
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+% Renumber footnotes consecutively
+%\counterwithout{footnote}{chapter}
+
+% Colors for Listings
+\definecolor{darkblue}{rgb}{0,0,.5}
+\definecolor{lightyellow}{rgb}{1,1,0.9}
+\definecolor{lightgrey}{rgb}{0.95,0.95,0.95}
+\definecolor{colKeys}{rgb}{0,0,1}
+\definecolor{colIdentifier}{rgb}{0,0,0}
+%\definecolor{colComments}{rgb}{1,0,0}		% red
+%\definecolor{colComments}{rgb}{0.1,0.5,0}	% green
+\definecolor{colComments}{rgb}{0.5,0.5,0.5}	% gray
+\definecolor{colString}{rgb}{0,0.5,0}
+
+% Formatting Source Edition
+\renewcommand{\lstlistlistingname}{List of Source Code} %LANGUAGE
+\renewcommand{\lstlistingname}{Source Code}
+\lstset{
+	float=tbph,								% makes sense on individual displayed listings only and lets them float
+	language=C++,		  					% choose the language of the code
+	basicstyle=\footnotesize,				% the size of the fonts that are used for the code
+	numbers=left,							% where to put the line-numbers
+	numberstyle=\tiny,						% the size of the fonts that are used for the line-numbers
+	%numberstyle=\footnotesize,				% the size of the fonts that are used for the line-numbers
+	stepnumber=1,							% the step between two line-numbers. If it's 1 each line will be numbered
+	numbersep=7pt,							% how far the line-numbers are from the code
+	backgroundcolor=\color{lightyellow},	% choose the background color. You must add \usepackage{color}
+	showspaces=false,						% show spaces adding particular underscores
+	showstringspaces=false,					% underline spaces within strings
+	showtabs=false,							% show tabs within strings adding particular underscores
+	frame=single,							% adds a frame around the code
+	%frame={trLb},							% adds a frame around the code
+	tabsize=4,								% sets default tabsize to 2 spaces
+	captionpos=b,							% sets the caption-position (b or t)
+	breaklines=true,						% sets automatic line breaking
+	breakatwhitespace=false,				% sets if automatic breaks should only happen at whitespace
+	breakindent=5pt,						% is the indention of the second, third,... line of broken lines
+	%escapeinside={\%*}{*)},				% if you want to add a comment within your code
+	identifierstyle=\color{colIdentifier},
+	keywordstyle=\color{colKeys},
+	stringstyle=\color{colString},
+	commentstyle=\color{colComments},
+	columns=fixed,
+	%columns=flexible,
+	%emph={bool,int,unsigned,char,true,false,void}, emphstyle=\color{blue},
+	%emph={[2]\#include,\#define,\#ifdef,\#endif}, emphstyle={[2]\color{darkblue}},
+}
+
+% recalculation of the type area (to avoid overfull boxes)
+%\KOMAoptions{DIV=last}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% user defined commands and helpers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% abbreviations with correct spacing %LANGUAGE
+\newcommand{\ua}{\mbox{u.\,a.\ }}
+\newcommand{\zB}{\mbox{z.\,B.\ }}
+\newcommand{\dahe}{\mbox{d.\,h.\ }}
+\newcommand{\iic}{\mbox{I\texttwosuperior C}} % IÂ²C
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SSE Thesis Document Template (Thomas Dietrich) %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

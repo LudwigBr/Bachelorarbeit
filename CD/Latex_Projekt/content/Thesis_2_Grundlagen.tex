@@ -1,0 +1,64 @@
+
+\chapter{Grundlagen}  
+\label{ch:Grundlagen}
+
+Im folgenden Kapitel wird auf die nötigen Grundlagen und Hintergründe eingegangen.
+Die Ladestation wird in ein bestehendes Projekt eingepflegt. Dieses bestehende Projekt beschäftigt sich mit der Simulation von Missionen für unbemannte Luftfahrzeuge. Einleitend wird das angewendete Verständnis eben jener Luftfahrzeuge erläutert. Im Anschluss wird die Projektumgebung grob skizziert. 
+
+\section{Unbemannte Luftfahrzeuge}
+\label{sec:Unbemannte Luftfahrzeuge}
+
+Ein Unbemanntes Luftfahrzeug (engl. Unmanned aerial vehicle, UAV) ist ein Luftfahrzeug, welches ohne Besatzung an Bord betrieben wird. Für die Steuerung können Fernsteuersysteme oder an Bord befindliche Computer zum Einsatz kommen. \cite{ICAO.2011}
+Der von der ICAO definierte Begriff schränkt wenig ein. Abgesehen vom Ausschluss von Flugmodellen für Freizeit- und Luftsportaktivitäten werden keine Flugobjekte ausgeschlossen. Sowohl moralisch umstrittene militärische Drohnen, als auch die Prototypen der automatisierten Paketzustellung fallen unter die Definition.
+Im Rahmen des bestehenden Projektes wird ein UAV als Multicopter, der zu zivilen Zwecken eingesetzt wird, verstanden.
+
+\subsection{Multicopter}
+\label{sub:Multicopter}
+
+Multicopter sind Flugobjekte mit mehreren Rotoren, die für Auftrieb sorgen. Einer der bekannten Vertreter ist der Quadrocopter (mit vier Rotoren), darüber hinaus werden unter anderem auch Tricopter, Hexacopter und Octocopter eingesetzt. Die Anzahl der Rotoren beeinflussen in erster Linie die Stabilität in der Luft. Darüber hinaus können Ausfälle einzelner Rotoren bei größerer Anzahl ausgeglichen werden. 
+Eine höhere Rotorenanzahl birgt nicht nur Vorteile. Das Fluggewicht und die nötige Leistung steigen. Daraus folgt, dass entweder größere Energiespeicher nötig sind, welche das Gewicht weiter erhöhen würden oder die Flugdauer mit steigender Rotorenanzahl abnimmt.  
+
+Seit einigen Jahren finden UAVs auch in privaten Bereichen Einsatzmöglichkeiten. Sie werden als Spiel- und Spaßwerkzeug zum Beispiel in Verbindung mit Augmented Reality (AR) verwendet. Dafür wird unter anderem eine einfache Anwendung benötigt. Die Geräte müssen nach dem Auspacken, Zusammenbauen und Aufladen ohne Fachkenntnisse benutzbar sein. \cite[S. 1477]{Bristeau.2011} Diese Vereinfachung für Endanwender wird durch Bordelektronik, die Steuerung und Stabilisierung ermöglicht. 
+
+Die Rotoren des Multicopters sind üblicherweise an einen Elektromotor angeschlossen. Die benötigte Energie wird von einem Energiespeicher geliefert. Hier kommen nahezu ausschließlich Lithium-Polymer-Akkumulatoren zum Einsatz, weitere Details dazu können im Kapitel \ref{ch:Ladeverhalten} nachgelesen werden. \cite{DanielBachfeld.2013}
+
+
+\section{Projektumgebung} 
+\label{sec:Projektumgebung}
+Dieses Kapitel stellt die Projektumgebung dar. Zu Beginn wird auf die verwendete Programmiersprache und das benutzte Framework eingegangen. Anschließend wird das bestehende Projekt abseits der zu implementierenden Ladestation vorgestellt. 
+
+\subsection{C++ und Framework OMNeT++}
+\label{sub:Framework OMNeT++}
+C++ ist eine Erweiterung der Programmiersprache C. Hinzugefügt werden Eigenschaften, die das objektorientierte Paradigma ermöglichen. Durch den Sprachursprung bleibt C++ effizient und mächtig. Beispielsweise eine automatische Speicherbereinigung findet nicht statt. Der Anwender hat alles in der Hand. Dessen ungeachtet kann die Abstraktion der Objektorientierung eingesetzt werden, um übersichtliche und wartbare Software zu schreiben.
+
+Frameworks werden eingesetzt, um den Entwicklungsaufwand zu reduzieren. Dies geschieht unter anderem durch die Bereitstellung von häufig genutzten Funktionen für den jeweiligen Anwendungsbereich.
+Das im Projekt eingesetzte Framework nennt sich OMNeT++, es basiert auf der Programmiersprache C++. Es beschreibt sich selbst als \glqq extensible, modular, component-based C++ simulation library and framework primarily for building network simulators.\grqq \cite{AndrasVarga.}.  
+Die Nutzung ist für wissenschaftliche Arbeiten  gebührenfrei \cite{AndrasVarga.b}. Die angebotene Entwicklungsumgebung, eine Tutorialreihe und die online Dokumentation vereinfachen den Einstieg.
+Das Framework ermöglicht die Erstellung von Objekten, welche miteinander und der Umwelt interagieren können. Darüber hinaus bietet es eine optionale grafische Darstellung, welche den Ablauf insbesondere für Außenstehende veranschaulicht. 
+
+\subsection{Projekt}
+\label{sub:Projekt}
+Die Arbeit baut auf ein bestehendes Projekt auf. In diesem Projekt werden Missionen für Multicopter simuliert. Die Missionen setzen sich aus einzelnen Kommandos zusammen, welche in der gleichen Form auch in der realen Welt genutzt werden können. Eine einfache Mission könnte aus einer Abfolge von mehreren Bewegungskommandos, die unendlich wiederholt werden sollen, bestehen. Im Laufe der Mission entleert sich der Akkumulator des eingesetzten Multicopters. Vor jedem Kommando führt der Multicopter eine Ressourcenkalkulation durch und prüft, ob die Energie noch für das nächste Kommando und einen anschließenden Flug zur nächstgelegenen Ladestation reicht. Falls dieser Test ein negatives Resultat liefert, wird das Flugobjekt ausgetauscht und das vorher im Einsatz befindliche fliegt zur nächsten Ladestation.
+Ein komplexeres Szenario könnte mehrere simultan genutzte UAVs enthalten und zusätzlich eine Begrenzung der vorhandenen Ersatz-UAVs. 
+
+
+\subsection{Implementierung}
+\label{sub:Implementierung}
+
+Das Projekt nutzt die objektorientierten Möglichkeiten der Sprache C++. Im folgenden Klassendiagramm wird ein Überblick über die vorhandene Struktur zu Beginn der Arbeit gezeigt. 
+Wie in vielen Softwareprojekten wird nicht ein Teil nach dem anderen entwickelt, sondern unterschiedliche Personen arbeiten an unterschiedlichen Teilen des Projektes. Während der Arbeit hat sich auch die Struktur des restlichen Projektes stetig weiterentwickelt.
+In der Abbildung \ref{abb:Projektstart UML-Klassendiagramm} wird das Klassendiagramm zum Projektstart aufgezeigt. Das gezeigte Klassendiagramm ist nicht vollständig, sondern soll den grundsätzlichen Aufbau verdeutlichen.
+Die zentrale Organisationseinheit der Simulation befindet sich innerhalb der \lstinline|MissionControl| Klasse. Diese verwaltet über Abbilder \lstinline|NodeShadow|'s die Objekte innerhalb der Simulation. 
+Die einzelnen Simulationsobjekte sind in einer deutlichen Hierarchie angeordnet. Die \lstinline|GenericNode| implementiert das \lstinline|IGenericNode| Interface und stellt die Grundlage für die Darstellung und Arbeit innerhalb der Simulation zur Verfügung. Außerdem wird hier die Kommandoliste \lstinline|CEEQueue| an das Objekt gebunden. 
+Die bestehende \lstinline|ChargingNode| baut auf der \lstinline|GenericNode| auf. Vor Projektstart war die \lstinline|ChargingNode| nur eine leere Hülle ohne Implementierungen. Die \lstinline|MobileNode| erbt ebenfalls von der \lstinline|GenericNode|. Zusätzlich wird ein Energiespeicher \lstinline|Battery| eingebunden.
+Die letzte Stufe der Hierarchie ist die \lstinline|UAVNode|, welche von der \lstinline|MobileNode| erbt. Diese repräsentiert einen Multicopter und wird für die Ausführung der Kommandos in den \lstinline|CommandExecEngine|'s benötigt. 
+
+
+\begin{figure}[H]
+	\caption{Projektstart UML-Klassendiagramm}
+	\adjincludegraphics[width=\textwidth,trim={{.04\width} {.4\height} {.04\width} {.033\height}},clip]{images/ClassDiagramPorjectStart}
+	\label{abb:Projektstart UML-Klassendiagramm}
+\end{figure}
+
+
+

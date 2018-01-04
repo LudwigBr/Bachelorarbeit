@@ -1,0 +1,86 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SSE Thesis Document Template (Thomas Dietrich) %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{header}
+
+\begin{document}
+%\input{content/Nomenclature}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Title Page and Abstracts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pdfbookmark{\thesistype{} \autor}{\thesistype{} \autor}
+\include{content/CoverPage}
+
+\cleardoublepage{}
+%\pdfbookmark{Acknowledgement}{Acknowledgement} %LANGUAGE
+%\pdfbookmark{Danksagung}{Danksagung} %LANGUAGE
+%\include{content/Acknowledgement}
+
+%\cleardoublepage{}
+\pdfbookmark{Abstract}{Abstract}
+\include{content/Abstract}
+    
+\cleardoublepage{}
+\pagenumbering{roman}
+%\pdfbookmark{Table of Content}{Table of Content} %LANGUAGE
+\pdfbookmark{Inhaltsverzeichnis}{Inhaltsverzeichnis} %LANGUAGE
+\tableofcontents
+
+\cleardoublepage{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{arabic}
+\include{content/Thesis_1_Einleitung}
+\include{content/Thesis_2_Grundlagen}
+\include{content/Thesis_3_Ladeverhalten}
+\include{content/Thesis_4_Anforderungsanalyse}
+\include{content/Thesis_5_Konzeptionierung}
+\include{content/Thesis_6_Implementierung}
+\include{content/Thesis_7_Conclucions}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Appendix and Lists
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\cleardoublepage
+
+\pagenumbering{Roman}
+\begin{appendix}
+\include{content/Appendix}
+\end{appendix}
+
+\KOMAoptions{open=any}
+\include{content/CDStructure}
+
+%\markboth{\nomname}{\nomname}
+
+%\printnomenclature			% list of abbreviations
+\listoftables				% List of tables
+\listoffigures				% List of figures
+\lstlistoflistings			% List of sourcecode
+
+\KOMAoptions{open=left}
+\nocite{*} 					% all sources
+\bibliography{bibliography}	% list the sources
+\KOMAoptions{open=right}
+
+\listoftodos				% TODOs, nicht im final Dokument!
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Declaration of Autonomy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/DeclarationOfAuthorship}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SSE Thesis Document Template (Thomas Dietrich) %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

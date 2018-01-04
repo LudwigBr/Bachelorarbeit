@@ -1,0 +1,95 @@
+
+\chapter{Anforderungsanalyse}
+\label{cha:Anforderungsanalyse}
+
+Alle Anforderungen werden natürlich sprachlich ausgedrückt und erhalten eine hervorgehobene Bezeichnung. Diese Bezeichnung wird in der tabellarischen Darstellung am Ende des Kapitels aufgegriffen, welche eine Zusammenfassung der Anforderungen darstellt.
+Jede Anforderung wird gemäß der MoSCoW-Priorisierung gewichtet \cite{InternationalInstituteofBusinessAnalysis.2012}.
+
+\begin{table}[h]
+	\caption{MoSCoW Akkronym}
+	\renewcommand{\arraystretch}{1.5}
+	\begin{tabular}{llp{10cm}}
+		M & MUST & Diese Anforderung muss erfüllt werden. \\
+		S & SHOULD & Diese Anforderung sollte erfüllt werden. \\
+		C & COULD & Diese Anforderung könnte erfüllt werden, falls erstens die höher priorisierten Anforderungen abgearbeitet sind und zweitens sie diese nicht negativ beeinflusst. \\
+		W & WON'T & Diese Anforderung wird verschoben und nicht in dieser Iteration der Entwicklung betrachtet. Diese Priorisierung wertet nicht die Wichtigkeit der Anforderung für das System, sondern lediglich die Wichtigkeit für die aktuelle Entwicklung. Eine solche Priorisierung erkennt die Relevanz der Anforderung an, verschiebt diese jedoch auf eine spätere Entwicklunsiteration. \\
+	\end{tabular}
+	\label{tab:Anforderungstypen}
+\end{table}
+
+
+
+\section{Funktionale Eigenschafen}
+\label{sec:funktionale Eigenschafen}
+
+\textbf{Ladeplätze: } Jede Ladestation hat eine begrenzte Anzahl von Ladeplätzen, diese bestimmen wie viele Ladevorgänge gleichzeitig parallel ablaufen können. \textit{Priorität MUST}
+
+\textbf{Warteplätze: } Jede Ladestation hat unbegrenzt viele Warteplätze. Hier können die Multicopter während sie auf ihre Aufladung warten verbleiben und bereits aufgeladene Multicopter können hier bis zu ihrem nächsten Einsatz bleiben.
+Die Warteplätze sollen begrenzt werden können. Eine Überschreitung der Kapazität soll eine Fehlerinformation erzeugen. \textit{Priorität MUST}
+
+\textbf{Verbindung mit Multicopter: } Ein Multicopter soll sich mit einer Ladestation verbinden können. Nach der Verbindung kann der Multicopter ruhen und sein Akkumulator wird ohne weitere erforderliche Aktivität aufgeladen. \textit{Priorität MUST}
+
+\textbf{Realistisches Ladeverhalten: }  Die Ladestation soll einen realistischen Ladealgorithmus implementieren. \textit{Priorität MUST}
+
+\textbf{Reservierungen: } Ein Multicopter kann einen Ladeplatz einer Ladestation vorzeitig reservieren. Die Abarbeitung der Ladeaufträge soll basierend auf dem Reservierungszeitpunkt erfolgen. \textit{Priorität MUST}
+
+\textbf{Vorhersagen: } Die Ladestation kann eine Aussage über den Ladevorgang treffen und diese Aussage mit anderen Netzwerkteilnehmern kommunizieren. Für Vorhersageanfragen wird unterschieden in zwei Fälle. Erstens soll der Zeitpunkt für einen abgeschlossenen Aufladevorgang abgefragt werden können. Es müssen ein prozentualer Start- und Zielwert berücksichtigt werden. Zweitens soll die Kapazität des Akkumulators, die bis zu einem Zielzeitpunkt aufgeladen werden kann, ausgegeben werden können.
+Die Vorhersage soll die, zum Zeitpunkt der Anfrage bestehenden, Reservierungen mit einbeziehen. Dadurch ist das Ergebnis einer Vorhersage immer als pessimistische Angabe zu verstehen. Falls andere Reservierungen nicht wahrgenommen werden, ist ein besseres Ergebnis möglich. \textit{Priorität MUST}
+
+\textbf{Anfrage für Multicopter: } Die Ladestation soll auf Ersatzanfragen für Multicopter reagieren können und einen zur Anfrage passenden Multicopter auswählen. In der Anfrage ist ein Mindestladezustand enthalten. Dieser muss so wenig wie möglich überschritten werden. \textit{Priorität MUST}
+
+\textbf{Nutzungsstatistiken: }  Im Laufe der Simulation sollen anfallende Daten aggregiert und zur Verfügung gestellt werden. Insbesondere soll die Anzahl der erfolgreichen Ladevorgänge und die aufgeladene Energie erfasst werden. \textit{Priorität MUST}
+
+\textbf{Ressourcenverwaltung: } Die Ladestationen sollen über einen Energiespeicher verfügen, welcher als begrenzt oder unbegrenzt konfigurierbar sein soll. Eine versuchte Aufladung an einer Ladestation mit leerem, begrenztem Energiespeicher soll fehlschlagen und eine Fehlerinformation ausgeben. \textit{Priorität SHOULD}
+
+\textbf{Schnelle Teilaufladung Priorisieren: } Es soll eine Möglichkeit geben den schnellen Aufladeteil zu priorisieren. Für das CCCV Verfahren bedeutet das, dass erst alle Wartenden Multicopter bis zum Ende der linearen Phase aufgeladen werden, bevor die ersten Multicopter vollständig aufgeladen werden. \textit{Priorität SHOULD}
+
+\textbf{Umverteilung von Multicoptern: } Alle Ladestationen sollen untereinander kommunizieren und die zur Verfügung stehenden Multicopter aufteilen. Die Zahlenwerte für die Abgabe und Aufnahme von Multicoptern anderer Ladestationen soll konfiguriert werden können. \textit{Priorität COULD}
+
+\textbf{Kooperation zwischen Ladestationen: } Alle Ladestationen sollen miteinander kooperieren, um Kapazitätsengpässe auszugleichen. \textit{Priorität COULD}
+
+\textbf{Mobile Ladestation: } Jede Ladestation soll über die Fähigkeit zur eigenen Fortbewegung verfügen. \textit{Priorität WON'T}
+
+
+\section{Nicht funktionale Eigenschafen}
+\label{sec:nicht funktionale Eigenschafen}
+
+\textbf{Codesprache: } Im Quelltext darf ausschließlich die englische Sprache verwendet werden. \textit{Priorität MUST}
+
+\textbf{Coderichtlinien: } Die bestehenden Coderichtlinien, welche in der automatischen Formatierung der Entwicklungsumgebung hinterlegt sind, sollen eingehalten werden. \textit{Priorität MUST}
+
+\textbf{Ladeplatzorganisation Zeitverzögerung: } Die Organisation der Ladeplätze soll ohne Zeitverzögerung erfolgen. Die benötigte Zeit, um einen Multicopter an den Lademechanismus an- und abzuschließen soll vernachlässigt werden. \textit{Priorität MUST}
+
+\textbf{Graphische Darstellung: } Die Ladestationen sollen in das bestehende Projekt eingepflegt werden und in der graphischen Simulationsansicht angemessen dargestellt werden. \textit{Priorität SHOULD}
+
+
+\section{Übersicht}
+\label{sec:Übersicht Anforderungen}
+
+\begin{table}[h]
+	\caption{Übersicht Anforderungen}
+	\renewcommand{\arraystretch}{2}
+	\begin{tabular}{|p{8cm}|c|c|}
+		\hline
+		\textbf{Bezeichnung} & \textbf{Funktional} & \textbf{Priorität} \\ \hline \hline
+		Ladeplätze & Ja & MUST \\ \hline
+		Warteplätze & Ja & MUST \\ \hline
+		Verbindung mit Multicopter & Ja & MUST \\ \hline
+		Realistisches Ladeverhalten & Ja & MUST \\ \hline
+		Reservierungen & Ja & MUST \\ \hline
+		Vorhersagen & Ja & MUST \\ \hline
+		Anfrage für Multicopter & Ja & MUST \\ \hline
+		Nutzungsstatistiken & Ja & MUST \\ \hline
+		Ressourcenverwaltung & Ja & SHOULD \\ \hline
+		Schnelle Teilaufladung Priorisieren & Ja & SHOULD \\ \hline
+		Umverteilung von Multicoptern & Ja & COULD \\ \hline
+		Kooperation zwischen Ladestationen & Ja & COULD \\ \hline
+		Mobile Ladestation & Ja & WON'T \\ \hline \hline
+		Codesprache & Nein & MUST \\ \hline
+		Coderichtlinien & Nein & MUST \\ \hline
+		Ladeplatzorganisation Zeitverzögerung & Nein & MUST \\ \hline
+		Graphische Darstellung & Nein & SHOULD \\ \hline
+	\end{tabular}
+	\label{tab:Zusammenfassung Anforderungen}
+\end{table}
+

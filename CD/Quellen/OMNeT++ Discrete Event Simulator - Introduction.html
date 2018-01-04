@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xml:lang="en-gb" slick-uniqueid="3" lang="en-gb"><head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- base href="https://www.omnetpp.org/intro" -->
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="author" content="Administrator">
+	<meta name="generator" content="Joomla! - Open Source Content Management">
+	<title>OMNeT++ Discrete Event Simulator - Introduction</title>
+	<link href="https://www.omnetpp.org/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+	<link href="https://www.omnetpp.org/component/search/?Itemid=150&amp;format=opensearch" rel="search" title="Search OMNeT++ Discrete Event Simulator" type="application/opensearchdescription+xml">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/grid-responsive.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/bootstrap.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/master-b81d876ba55d7c135dece2fbc1729431.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/master-gecko.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/demo-b81d876ba55d7c135dece2fbc1729431.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/mediaqueries.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/menu.css" rel="stylesheet" type="text/css">
+	<link href="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/menu-gecko.css" rel="stylesheet" type="text/css">
+	<style type="text/css">
+#rt-logo {background: url(/images/logo/omnetpp-logo-23.png) 50% 0 no-repeat !important;}
+#rt-logo {width: 116px;height: 40px;}
+
+
+
+div.mod_search31 input[type="search"]{ width:auto; }
+	</style>
+	<script async="" src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/analytics.js"></script><script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/jquery.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/jquery-noconflict.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/jquery-migrate.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/caption.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/mootools-core.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/core.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/mootools-more.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/gantry-totop.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/browser-engines.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/rokmediaqueries.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/headroom.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/headroom_init.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/rokmediaqueries_002.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/sidemenu.js" type="text/javascript"></script>
+	<script src="OMNeT++%20Discrete%20Event%20Simulator%20-%20Introduction-Dateien/html5fallback.js" type="text/javascript"></script>
+	<script type="text/javascript">
+jQuery(window).on('load',  function() {
+				new JCaption('img.caption');
+			});
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+		__gaTracker('create', 'UA-240922-2', 'auto');
+		__gaTracker('send', 'pageview');
+	
+
+
+	</script>
+
+</head>
+<body class="logo-type-custom header-headroom-enabled-scroll showcase-bg-transition-top-to-bottom showcase-type-preset1 feature-type-preset1 mainbody-overlay-light extension-type-preset1 footer-overlay-dark copyright-overlay-dark font-family-trebuchet font-size-is-default menu-type-splitmenu layout-mode-responsive col12 option-com-content menu-intro " id="scrollheader">
+	<div id="rt-page-surround">
+				<header id="rt-header-surround" class="scrollheader animated">
+						<div id="rt-header" class="rt-overlay-light">
+				<div class="rt-container">
+					<div class="rt-grid-3 rt-alpha">
+            <div class="rt-logo-block">
+            <a href="https://www.omnetpp.org/" id="rt-logo"></a>
+        </div>
+        
+</div>
+<div class="rt-grid-9 rt-omega">
+    	<div class="menu-block">
+		
+		<div class="clear"></div>
+	<ul class="gf-menu gf-splitmenu l1 top">
+                     <li class="item150 parent active last" id="current">
+
+                <a class="item" href="https://www.omnetpp.org/intro">
+
+                                Introduction                </a>
+
+                    </li>
+                             <li class="item11">
+
+                <a class="item" href="https://www.omnetpp.org/omnetpp">
+
+                                Download                </a>
+
+                    </li>
+                             <li class="item5 parent">
+
+                <a class="item" href="https://www.omnetpp.org/models">
+
+                                Simulation models                </a>
+
+                    </li>
+                             <li class="item3">
+
+                <a class="item" href="https://www.omnetpp.org/documentation">
+
+                                Documentation                </a>
+
+                    </li>
+                             <li class="item414">
+
+                <a class="item" href="https://docs.omnetpp.org/" target="_blank">
+
+                                Tutorials                </a>
+
+                    </li>
+                             <li class="item40 parent">
+
+                <a class="item" href="https://www.omnetpp.org/get-involved">
+
+                                Get involved!                </a>
+
+                    </li>
+            </ul></div>
+	
+</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+					</header>
+		
+				<div id="rt-drawer">
+			<div class="rt-container">
+								<div class="clear"></div>
+			</div>
+		</div>
+		
+		
+				<section id="rt-main-surround">
+			<div id="rt-transition">
+				<div id="rt-mainbody-surround">
+																																								<div class="rt-container">
+						          
+<div id="rt-main" class="mb9-sa3">
+                <div class="rt-container">
+                    <div class="rt-grid-9 ">
+                                                						<div class="rt-block">
+	                        <div id="rt-mainbody">
+								<div class="component-content">
+	                            	<article class="item-page" itemscope="" itemtype="http://schema.org/Article">
+<meta itemprop="inLanguage" content="en-GB">
+	<h2 itemprop="name">
+					What is OMNeT++?					</h2>
+	
+
+
+
+
+
+
+
+<div itemprop="articleBody">
+	<p class="info" style="font-family: 'cabinregular', Verdana, Helvetica, Arial, sans-serif;">&nbsp;<strong>OMNeT++
+ is an extensible, modular, component-based C++ simulation library and 
+framework, primarily for building network simulators.</strong> "Network"
+ is meant in a broader sense that includes wired and wireless 
+communication networks, on-chip networks, queueing networks, and so on. 
+Domain-specific functionality such as support for sensor networks, 
+wireless ad-hoc networks, Internet protocols, performance modeling, 
+photonic networks, etc., is provided by model frameworks, developed as 
+independent projects. OMNeT++ offers an Eclipse-based IDE, a graphical 
+runtime environment, and a host of other tools. There are extensions for
+ real-time simulation, network emulation, database integration, SystemC 
+integration, and several other functions.</p>
+<p><span style="line-height: 1.3em;">Although OMNeT++</span> is not a network si<span style="line-height: 1.3em;">mulator
+ itself, it has gained widespread popularity as a network simulation 
+platform in the scientific community as well as in industrial settings, 
+and building up a large user community.</span></p>
+<p>OMNeT++ provides a component architecture for models. Components <i>(modules)</i> are programmed in C++, then assembled into larger components and models using a high-level language <i>(NED)</i>.
+ Reusability of models comes for free. OMNeT++ has extensive GUI 
+support, and due to its modular architecture, the simulation kernel (and
+ models) can be embedded easily into your applications.</p>
+<p>Check the <a href="https://www.omnetpp.org/intro/screenshots">screenshots</a> if you are interested how the IDE and running simulations look like.</p>
+<h3>Components</h3>
+<ul>
+<li>simulation kernel library</li>
+<li>NED topology description language</li>
+<li>OMNeT++ IDE based on the Eclipse platform</li>
+<li>GUI for simulation execution, links into simulation executable (Tkenv)</li>
+<li>command-line user interface for simulation execution (Cmdenv)</li>
+<li>utilities (makefile creation tool, etc.)</li>
+<li>documentation, sample simulations, etc.</li>
+</ul>
+<h3>Platforms</h3>
+<p>OMNeT++ runs on Windows, Linux, Mac OS X, and other Unix-like systems.</p>
+<p>The OMNeT++ IDE requires Windows, Linux, or Mac OS X.</p>
+<h3>Credits</h3>
+<p>OMNeT++ has been originally developed by András Varga. See <a href="https://www.omnetpp.org/22-page/3636-credits">Credits, acknowledgements.</a></p></div>
+
+
+
+	</article>
+
+
+
+								</div>
+	                        </div>
+						</div>
+                                                                    </div>
+                                <div class="rt-grid-3 ">
+                <div id="rt-sidebar-a">
+                    	<div class="rt-block ">
+		<div class="module-surround">
+						<div class="module-content submenu">
+		    	<ul class="menu l1 ">
+                     <li class="item7">
+
+                <a class="item" href="https://www.omnetpp.org/intro/what-is-omnet">
+
+                                What is OMNeT++                </a>
+
+                    </li>
+                             <li class="item43">
+
+                <a class="item" href="https://www.omnetpp.org/intro/screenshots">
+
+                                Screenshots                </a>
+
+                    </li>
+                             <li class="item49">
+
+                <a class="item" href="https://www.omnetpp.org/intro/videos">
+
+                                Videos                </a>
+
+                    </li>
+                             <li class="item8">
+
+                <a class="item" href="https://www.omnetpp.org/intro/license">
+
+                                License                </a>
+
+                    </li>
+                             <li class="item156">
+
+                <a class="item" href="http://www.omnest.com/" target="_blank">
+
+                                Commercial edition                </a>
+
+                    </li>
+            </ul>			</div>
+		</div>
+	</div>
+	
+ 			            <div class="rt-block box1 nomarginbottom nopaddingbottom rt-center">
+           	<div class="module-surround">
+	           		                	<div class="module-content">
+	                		<div class="searchbox1 nomarginbottom nopaddingbottom rt-center mod_search31">
+	<form action="/intro" method="post" class="form-inline">
+		<label for="mod-search-searchword" class="element-invisible">Search ...</label> <input name="searchword" id="mod-search-searchword" maxlength="200" class="inputbox search-query" size="30" placeholder="Search ..." type="search">		<input name="task" value="search" type="hidden">
+		<input name="option" value="com_search" type="hidden">
+		<input name="Itemid" value="150" type="hidden">
+	</form>
+</div>
+	                	</div>
+                	</div>
+           </div>
+	
+                </div>
+            </div>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+					</div>
+																													</div>
+			</div>
+		</section>
+		
+		
+				<div id="rt-copyright" class="rt-overlay-dark">
+			<div class="rt-container">
+				<div class="rt-grid-4 rt-alpha">
+    	<div class="rt-copyright-content rt-block">
+		Copyright © 2001-2015. <a href="http://omnetpp.org/">OpenSim Ltd.</a>	</div>
+	
+</div>
+<div class="rt-grid-4">
+    	<div class="clear"></div>
+	<div class="rt-block">
+		<a href="#" id="gantry-totop" rel="nofollow" style="outline: medium none currentcolor;"><span class="icon-angle-up rt-totop-icon"></span></a>
+	</div>
+	
+</div>
+<div class="rt-grid-4 rt-omega">
+    		<div class="rt-social-buttons rt-block">
+						<a class="social-button rt-social-button-1" href="http://google.com/+omnetpp" target="_blank">
+				<span class="icon-google-plus"></span>
+									<span class="social-button-text">Join Us</span>
+							</a>
+			
+						<a class="social-button rt-social-button-2" href="https://twitter.com/omnetpp" target="_blank">
+				<span class="icon-twitter"></span>
+									<span class="social-button-text">Follow Us</span>
+							</a>
+			
+						<a class="social-button rt-social-button-3" href="http://groups.google.com/group/omnetpp/feeds" target="_blank">
+				<span class="icon-rss"></span>
+									<span class="social-button-text">Mailing List</span>
+							</a>
+			
+			
+			
+			
+			<div class="clear"></div>
+		</div>
+		
+</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		
+		
+						
+									</div>
+
+
+<div class="gf-menu-toggle" style="display: none;"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></div><div class="gf-menu-device-wrapper-sidemenu"><div class="gf-menu-device-container responsive-type-panel"><div class="gf-menu-device-container-wrapper"></div></div></div></body></html>
