@@ -18,7 +18,7 @@ Im Rahmen der diskreten eventbasierten Simulationsumgebung muss die Ladestation 
 \section{Nachrichten}
 \label{sec:Nachrichten}
 
-Für die Kommunikation zwischen verschiedenen Netzwerkteilnehmern stellt OMNeT++ Nachrichten zur Verfügung. Nachrichten sind Objekte vom Typ \lstinline|cMessage|. Ihnen kann eine Bezeichnung zugewiesen werden, was eine Unterscheidung ermöglicht. Darüber hinaus können eigene Nachrichtentypen in speziellen (.msg) Dateien definiert werden. Diesen können neben einer Bezeichnung noch individuelle weitere Informationen in Form von Parametern enthalten. Diese vereinfachten Klassendefinitionen werden während der Kompilierung in vollwertige C++ Klassen übersetzt, welche alle nötigen Eigenschaften und Methoden für den Versand beinhalten. Parameter können über Setter-Methoden angehangen und über Getter-Methoden ausgelesen werden. 
+Für die Kommunikation zwischen Netzwerkteilnehmern stellt OMNeT++ Nachrichten zur Verfügung. Nachrichten sind Objekte vom Typ \lstinline|cMessage|. Ihnen kann eine Bezeichnung zugewiesen werden, was eine Unterscheidung ermöglicht. Darüber hinaus können eigene Nachrichtentypen in speziellen (.msg) Dateien definiert werden. Diesen können neben einer Bezeichnung noch individuelle weitere Informationen in Form von Parametern enthalten. Diese vereinfachten Klassendefinitionen werden während der Kompilierung in vollwertige C++ Klassen übersetzt, welche alle nötigen Eigenschaften und Methoden für den Versand beinhalten. Parameter können über Setter-Methoden angehangen und über Getter-Methoden ausgelesen werden. 
 
 Damit die Nachricht erfolgreich versendet werden kann muss außerdem der richtige Empfänger bekannt sein. Die definierten Verbindungen (\ref{sec:Grundlegende Designentscheidungen}) werden in der Simulation mit In- und Outputgates organisiert. Ein Gate verbindet dabei immer genau zwei Netzwerkteilnehmer. Durch die Unterteilung in In- und Output können so auch einseitige Kommunikationswege abgebildet werden. Da die Auswahl des richtigen Gates für den Nachrichtenversand ein für alle Objekte relevantes Problem ist, wird eine Hilfsmethode in der \lstinline|GenericNode| geplant. Diese Methode soll das passende Gate zu einem übergebenen Objekt im Netzwerk zurückgeben.
 
@@ -123,7 +123,7 @@ In der Ladestation werden die Anzahl der Reservierungen und der fertig geladenen
 	\label{abb:statistics}
 \end{figure}
 
-
+\pagebreak
 \section{Ressourcenverwaltung}
 \label{sec:Ressourcenverwaltung}
 Für das Hinzufügen eines Energiespeichers zur Ladestation, kann auf die bestehende Projektarchitektur zugegriffen werden. Die Ladestation wird mit einem Objekt der Klasse \lstinline|Battery| assoziiert, zu sehen ist dies in der Abbildung \ref{abb:ChargingNodeBattery}. Während der Initialisierung wird die Maximalkapazität aus der Konfiguration ausgelesen. Darauf basierend wird das Akkumulatorobjekt erstellt. Dieses stellt die Funktionalität eines begrenzten oder unbegrenzten Energiespeichers zur Verfügung, je nach Konfiguration.

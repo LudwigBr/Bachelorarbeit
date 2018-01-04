@@ -11,6 +11,7 @@ Es werden zwei Möglichkeiten angeboten, wie Multicopter einen Ladeplatz erhalten
 Falls die Ladestation bis zu diesem Zeitpunkt nicht aktiv war, wird die regelmäßige Aktualisierungsroutine mit Hilfe einer ersten Nachricht mit dem Namen update aktiviert. Diese Nachricht wird zur aktuellen Simulationszeit verschickt und kommt durch mangelnde Nachrichtenverzögerung zum selben Zeitpunkt an und löst den ersten Ladevorgang und die erste Platzverteilung aus. 
 
 Die zweite Möglichkeit um einen Ladeplatz zugewiesen zu bekommen ist eine Reservierung zu tätigen. Dafür muss eine Nachricht mit dem Namen \lstinline|reserveSpot| an die Ladestation gesendet werden. Diese muss vom Typ \lstinline|ReserveSpotMsg| sein und Informationen über den gewünschten Zielzustand, die erwartete Ankunft und den erwarteten Energieverbrauch bis zur Ankunft enthalten. Der aktuelle Stand des Akkumulators kann direkt vom Objekt abgefragt werden und muss deshalb nicht verschickt werden. Vorteil einer Reservierung ist, dass die Warteliste nach dem Zeitpunkt der Reservierung sortiert wird. Darüber hinaus wird der Ladestation eine bessere Vorhersage für andere Interessenten ermöglicht. Der Ablauf nach dem Empfang der Nachricht ist analog zur ersten Möglichkeit, mit dem Unterschied das die enthaltenen Informationen an die \lstinline|appendToObjectsWaiting()| Methode übergeben werden. 
+
 \begin{lstlisting}[caption={handleMessage() in ChargingNode.cc}]
 void ChargingNode::handleMessage(cMessage* msg)
 {
@@ -45,7 +46,7 @@ void ChargingNode::handleMessage(cMessage* msg)
 Die zu Beginn des Kapitels mehrfach referenzierte Methode \lstinline|appendToObjectsWaiting()| hat den Zweck ein Objekt der Warteliste hinzuzufügen. Dabei muss ein Zeiger auf ein Objekt vom Typ \lstinline|MobileNode| und ein gewünschter Zielladezustand in Prozent übergeben werden. Darüber hinaus werden im Fall einer Reservierung die Zeit der Reservierung, die erwartete Ankunft und der erwartete Verbrauch bis zur Ankunft als Parameter übergeben.
 Zu Beginn der Methode wird geprüft, ob noch Warteplätze frei sind und ob das Objekt bereits in der Warteschlange ist. Sollte eine der beiden Bedingungen zutreffen wird eine entsprechende Fehlermeldung generiert und die Methode vorzeitig beendet. Anschließend wird ein Containerobjekt der Klasse \lstinline|ChargingNodeSpotElement| erstellt. Dafür wird ein die Aufladezeit, die zu erwartende Wartezeit, der Zielzustand und Zeiger auf das \lstinline|MobileNode| Objekt benötigt. Die Aufladezeit wird vom implementierten Ladealgorithmus berechnet, dafür wird der aktuelle Zustand und der zu erwartende Verbrauch berücksichtigt. Die Wartezeit wird in einer Hilfsmethode \lstinline|getEstimatedWaitingSeconds()| berechnet. Das Ergebnis ist, falls eine schnelle Aufladung priorisiert wird, nicht bindend. Nach der Erstellung werden die Ankunftszeit und der Zeitpunkt der Reservierung mit je einer Setter-Methode gesetzt. Falls es sich um keine Reservierung handelt wird der Standardwert, welcher dem aktuellen Simulationszeitpunkt entspricht verwendet.
 Abschließend wird das erstellte Containerobjekt der Warteliste \lstinline|objectsWaiting| hinzugefügt und eine Bestätigungsmitteilung ausgegeben.
-
+\\\\\\\\\\
 \begin{lstlisting}[caption={appendToObjectsWaiting() in ChargingNode.cc}]
 /**
 * Appends a MobileNode to the waiting queue.
@@ -84,13 +85,13 @@ void ChargingNode::appendToObjectsWaiting(MobileNode* mobileNode, double targetP
 \end{lstlisting}
 
 \section{Aktualisierung der Ladestation}
-\label{sec:Aktualisierung der Ladestation}[caption={updateState() in ChargingNode.cc}]
+\label{sec:Aktualisierung der Ladestation}
 Zu Beginn dieser Sektion wird die \lstinline|updateState()| Methode vorgestellt, welche den Rahmen des Aktualisierungsvorgangs bereitstellt. Im Anschluss werden die nötigen Schritte und ihr Ablauf vorgestellt. Die Struktur orientiert sich an dem Durchlaufzyklus eines Multicopters und es wird mit dem Hinzufügen zu einem Ladeplatz begonnen.
 
 Die Aktualisierung beginnt nach dem Empfang einer Nachricht mit dem Namen \lstinline|update|. Die \lstinline|updateState()| Methode, welche jede von der \lstinline|GenericNode| erbende Klasse implementieren muss wird aufgerufen. Zu Beginn wird der Ladezustand der Station überprüft, falls keine weitere Energie zur Verfügung steht wird der restliche Ablauf direkt abgebrochen.
 Wenn die Ladeplätze besetzt sind werden diese in der \lstinline|charge()| Methode aufgeladen. Anschließend werden die bis zum Zielzustand geladenen Multicopter von den Ladeplätzen entfernt. Im Anschluss und unabhängig davon, ob in diesem Aktualisierungsvorgang bereits Objekte geladen wurden, werden die Ladeplätze gefüllt. Nachdem alle Ladeplätze belegt sind oder keine weiteren wartenden Multicopter zur Verfügung stehen, wird die Methode \lstinline|rearrangeChargingSpots()| aufgerufen. In dieser Methode werden die Ladeplätze umverteilt. Wenn ein Objekt der Ladeliste später reserviert hat, als ein Objekt der Warteliste, werden diese getauscht. Falls die Priorisierung der schnellen Aufladung aktiviert ist, kann hier eine nachträgliche Änderung der Ladeplätze erfolgen.
-
-\begin{lstlisting}
+\\\\\\\\
+\begin{lstlisting}[caption={updateState() in ChargingNode.cc}]
 void ChargingNode::updateState()
 {
 	if (battery.isEmpty()) {
